@@ -20,10 +20,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using TrackIt.Models;
-using TrackIt.PreData;
+using Track.Models;
+using Track.PreData;
 
-namespace TrackIt.Areas.Identity.Pages.Account
+namespace Track.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {

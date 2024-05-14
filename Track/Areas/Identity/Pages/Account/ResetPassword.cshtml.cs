@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace TrackIt.Areas.Identity.Pages.Account
+namespace Track.Areas.Identity.Pages.Account
 {
     public class ResetPasswordModel : PageModel
     {

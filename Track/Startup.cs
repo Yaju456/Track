@@ -40,6 +40,7 @@ namespace Track
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+
             services.AddScoped<IunitOfwork, UnitofWork>();
             services.AddRazorPages();
             services.AddScoped<IEmailSender, EmailSender>();

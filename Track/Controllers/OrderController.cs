@@ -26,6 +26,7 @@ namespace Track.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.ActivePage = "Order";
             return View();
         }
 
@@ -53,6 +54,7 @@ namespace Track.Controllers
 
         public IActionResult newOrder()
         {
+            ViewBag.ActivePage = "Order";
             IEnumerable<SelectListItem> Products= _db.Product.getAll(prop:null).Select(u=> new SelectListItem
             {
                 Text=u.Id + " " + u.Name,
@@ -148,6 +150,7 @@ namespace Track.Controllers
         }
         public IActionResult AddSerial(int? id)
         {
+            ViewBag.ActivePage = "Stock";
             IEnumerable<SelectListItem> Customer_id = _db.customer.getAll(prop: null).Select(u => new SelectListItem
             {
                 Text = u.Id + " " + u.Name,
@@ -167,7 +170,8 @@ namespace Track.Controllers
         [HttpPost]
         public IActionResult AddSerial(IDandSerial data) 
         {
-            if(ModelState.IsValid)
+            ViewBag.ActivePage = "Stock";
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -288,6 +292,7 @@ namespace Track.Controllers
 
         public IActionResult ViewOrder(int? id)
         {
+            ViewBag.ActivePage = "Order";
             OrderClass one = _db.Order.GetOne(u => u.Id == id, prop: "vendor");
             return View(one);
         }

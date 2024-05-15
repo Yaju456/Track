@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks.Dataflow;
 using Track.Data;
 using Track.Models;
 using Track.PreData;
@@ -37,6 +38,7 @@ namespace Track.Controllers
 
         public IActionResult Addvendor() 
         {
+            ViewBag.ActivePage = "Vendor";
             return View();
         }
 
@@ -107,6 +109,7 @@ namespace Track.Controllers
         }
         public IActionResult CustomerInfo()
         {
+            ViewBag.ActivePage = "Customer";
             CustomerClass customer = new CustomerClass();
             return View(customer);
         }
@@ -162,6 +165,39 @@ namespace Track.Controllers
             }
         }
 
+        public IActionResult DeleteVendor(int?id)
+        {
+            VendorClass vendorClass = _db.Vendor.GetOne(u => u.Id == id, null);
+            if(vendorClass != null)
+            {
+                try
+                {
+                    _db.Vendor.Delete(vendorClass);
+                    _db.Save();
+                    return Json(new
+                    {
+                        success=true,
+                        message="Value successfully Deleted"
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = ex.Message,
+                    });
+                }
+            }
+            else
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No value found"
+                });
+            }
+        }
         public IActionResult Delete(int? id) 
         {
             CustomerClass man = _db.customer.GetOne(u => u.Id == id,prop:null);

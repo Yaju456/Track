@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Track.Models;
+using Track.PreData;
 using Track.Repository.Irepository;
 using Track.ViewModel;
 
 namespace Track.Controllers
 {
+    [Authorize(Roles = Roll.Admin)]
     public class ChalaniController : Controller
     {
         public readonly IunitOfwork _db;
@@ -22,28 +26,80 @@ namespace Track.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.ActivePage = "Chalani";
             return View();
         }
 
+        //TO get the data from Chalani table
         public JsonResult getAllChalani()
         {
             List<ChalaniClass> data  = _db.Chalani.getAll(prop: "Customer").ToList();
             return Json(data);
         }
 
-        [HttpPost]
+        //To delete data from Chalani table
+        public JsonResult DeleteAllChalan(int id)
+        {
+            try
+            {
+                ChalaniClass one = _db.Chalani.GetOne(u => u.Id == id, null);
+                if (one != null)
+                {
+                    List<ChalanihasProductClass> ChasP = _db.Chalanihasproduct.getSpecifics(u => u.Chalani_id == one.Id, null).ToList();
+                    //ChalaniController hi = new ChalaniController(_db, _userManager);
+                    foreach (var data in ChasP)
+                    {
+                        JsonResult result = DeleteChalani(data.Id);//this is a IAction function which is below will return json data after deleting all its corresponding chalanihasproduct data
+                        string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+                        JObject jsonObject = JObject.Parse(jsonData);
+                        JObject Value = JObject.Parse(jsonObject.GetValue("Value").ToString());
+                        bool Tsuccess= (bool)Value.GetValue("success");
+                        if(!Tsuccess)//checking if the DeleteChalani function worked well
+                        {
+                            throw new Exception("Something went wrong");
+                        }
+                    }
+                    _db.Chalani.Delete(one);
+                    _db.Save();
+                    return Json(new
+                    {
+                        success=true,
+                        message="The value was deleted"
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "No data available"
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
+
+        [HttpPost]//this is to addd chalanihasproduct data
         public IActionResult AddChalani(ChalaniClass obj)
         {
-            if(ModelState.IsValid) 
+            ViewBag.ActivePage = "Chalani";
+            if (ModelState.IsValid) 
             {
                 List<ChalanihasProductClass> data;
-                if (obj.Id == 0) 
+                if (obj.Id == 0) //If new data is being changed
                 {
                     string User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     data = _db.Chalanihasproduct.getSpecifics(u => u.User_id == User_id && u.Chalani_id == null, null).ToList();
                     _db.Chalani.Add(obj);
                 }
-                else
+                else//if old data to update is being changed
                 {
                     data= _db.Chalanihasproduct.getSpecifics(u=>u.Chalani_id==obj.Id, null).ToList();
                     _db.Chalani.Update(obj);
@@ -57,7 +113,7 @@ namespace Track.Controllers
                     foreach(var lili in Stock)
                     {
                         lili.Customer_id= obj.Customer_id;
-                        _db.Stock.Update(lili);
+                        _db.Stock.Update(lili);//updating all the stock present in corresponding chalani has product 
                     }
                     _db.Chalanihasproduct.Update(item);
                 }
@@ -70,15 +126,16 @@ namespace Track.Controllers
                 return RedirectToAction("CreateChalani");
             }
         }
+        //get method to get correspoding chalani has product data present in current chalani
         public JsonResult getChalani(int? id)
         {
-            if(id==0)
+            if(id==0)//will return those chalani has product data in which no chalani_id foreign key is provided
             {
                 string? user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 List<ChalanihasProductClass> data = _db.Chalanihasproduct.getSpecifics(u => u.User_id == user_id && u.Chalani_id == null, prop: "Product").ToList();
                 return Json(data);
             }
-            else
+            else//when an edit button is clicked then all those chalani has product is 
             {
                 List<ChalanihasProductClass> data = _db.Chalanihasproduct.getSpecifics(u => u.Chalani_id == id, prop: "Product").ToList();
                 return Json(data);
@@ -87,6 +144,7 @@ namespace Track.Controllers
         }
         public IActionResult CreateChalani(int? id)
         {
+            ViewBag.ActivePage = "Chalani";
             IEnumerable<SelectListItem> CustomerName = _db.customer.getAll(null).Select(u => new SelectListItem
             {
                 Text = u.Name,
@@ -118,6 +176,8 @@ namespace Track.Controllers
             }
         }
 
+
+
         public JsonResult DeleteChalani(int id)
         {
             ChalanihasProductClass to_delete = _db.Chalanihasproduct.GetOne(u => u.Id == id, null);
@@ -133,7 +193,7 @@ namespace Track.Controllers
                 }
                 _db.Chalanihasproduct.Delete(to_delete);
                 _db.Save();
-                return Json(new
+                return Json(new 
                 {
                     success = true,
                     message = "Value Deleted"
@@ -141,13 +201,15 @@ namespace Track.Controllers
             }
             else
             {
-                return Json(new
+                return Json(new 
                 {
                     success=false,
                     message="Given value not found"
                 });
             }
         }
+
+
         [HttpPost]
         public IActionResult AddChalaniOne(ChalanihasProductVM obj)
         {

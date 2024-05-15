@@ -42,6 +42,7 @@ namespace Track.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.ActivePage = "Product";
             IEnumerable<SelectListItem> CompanyName = Company.names.Select(u => new SelectListItem
             {
                 Text = u,

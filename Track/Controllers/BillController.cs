@@ -26,6 +26,7 @@ namespace Track.Controllers
         }
         public IActionResult CreateBill()
         {
+            ViewBag.ActivePage = "Bill";
             IEnumerable<SelectListItem> CustomerName = _db.customer.getAll(null).Select(u=> new SelectListItem
             {
                 Text = u.Name,
@@ -132,6 +133,7 @@ namespace Track.Controllers
 
         public IActionResult Check(int? id)
         {
+            ViewBag.ActivePage = "Bill";
             IEnumerable<SelectListItem> userList = _userManager.Users.Select(u => new SelectListItem
             {
                 Text = u.UserName,
@@ -188,12 +190,14 @@ namespace Track.Controllers
         }
         public IActionResult Addbill()
         {
+            ViewBag.ActivePage = "Bill";
             return View();
         }
 
         [HttpPost]
         public IActionResult Addbill(BillClass bill)
         {
+            ViewBag.ActivePage = "Bill";
             if (ModelState.IsValid)
             {
                 _db.Bill.Add(bill);

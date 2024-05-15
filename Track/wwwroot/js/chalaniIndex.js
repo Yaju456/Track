@@ -84,7 +84,7 @@ function LoadTable(mval) {
 }
 
 function Delete(id) {
-    var Url = '/bill/Deletebill?id=' + id;
+    var Url = '/chalani/DeleteAllChalan?id=' + id;
     $.confirm({
         title: 'Delete',
         content: 'Are you Sure?',
@@ -94,8 +94,13 @@ function Delete(id) {
                     url: Url,
                     type: 'delete',
                     success: function (data) {
-                        toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
-                        LoadTable("");
+                        if (data.success) {
+                            toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
+                            LoadTable("");
+                        }
+                        else {
+                            toastr["Error"](data.message, "Error", { timeOut: 5000 });
+                        }
                     },
 
                 })

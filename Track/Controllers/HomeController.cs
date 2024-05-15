@@ -20,6 +20,7 @@ namespace Track.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.ActivePage = "Home";
             return View();
         }
 

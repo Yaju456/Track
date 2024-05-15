@@ -24,5 +24,10 @@ namespace Track.Models
         public long? PhoneNumber { get; set;}
 
         public string? Remarks { get; set; }
+
+        public int? Bill_id { get; set; }
+        [ValidateNever]
+        [ForeignKey(nameof(Bill_id))]
+        public BillClass Bill { get; set; }
     }
 }

@@ -59,8 +59,13 @@ function Delete(Url) {
                     url: Url,
                     type: 'delete',
                     success: function (data) {
-                        toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
-                        reloadTable("");
+                        if (data.success) {
+                            toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
+                            reloadTable("");
+                        }
+                        else {
+                            toastr["error"](data.message, "Value Deleted", { timeOut: 5000 });
+                        }
                     },
 
                 })

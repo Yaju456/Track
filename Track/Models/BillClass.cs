@@ -17,12 +17,10 @@ namespace Track.Models
         [ValidateNever]
         [ForeignKey(nameof(Customer_id))]
         public CustomerClass? Customer { get; set; }
-        [Required]
         public string? Billno { get; set; }
         [Required]
         public double total { get; set; }
 
-        [Required]
         public DateTime? Date {  get; set; } 
 
         public double? payment { get; set; }

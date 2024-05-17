@@ -242,7 +242,7 @@ namespace Track.Controllers
                             throw new Exception("No bill found");
                         }
                         bill.payment = Convert.ToInt32(bill.payment) + obj.Amount;
-                        obj.commission = (obj.Amount * obj.commissionper) / 100;
+                        obj.commissionper = (obj.commission/obj.Amount)*100;
                         _db.Bill.Update(bill);
                         _db.Payment.Add(obj);
                         _db.Save();
@@ -299,7 +299,7 @@ namespace Track.Controllers
         public JsonResult SerialId(int id, int Qua, int pro, int? f)
         {
             
-            List<Text_value> ids= _db.Stock.getSpecifics(u => u.InStock == "Y" && u.Product_id==pro, null).Select(u => new Text_value
+            List<Text_value> ids= _db.Stock.getSpecifics(u => u.InStock == "Y" && u.Product_id==pro && u.isDamaged==null, null).Select(u => new Text_value
             {
                 Id = u.Id,
                 Value = Convert.ToString(u.serial_number)

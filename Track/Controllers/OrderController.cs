@@ -40,14 +40,14 @@ namespace Track.Controllers
         
         public JsonResult Get(int? id) 
         {
-            List<StockClass> list = _db.Stock.getSpecifics(u => u.Order_id == id, prop: "Product,Customer").ToList();
+            List<StockClass> list = _db.Stock.getSpecifics(u => u.OrderhasProducts.Order_id == id, prop: "Product,Customer,OrderhasProducts").ToList();
             return new JsonResult(list);
         }
 
 
         public JsonResult GetMost()
         {
-            List<StockClass> list = _db.Stock.getAll(prop: "Product,Customer").ToList();
+            List<StockClass> list = _db.Stock.getAll(prop: "Product,Customer,OrderhasProducts").ToList();
             return new JsonResult(list);
         }
 
@@ -74,19 +74,42 @@ namespace Track.Controllers
         public JsonResult GetBucket()
         {
             string UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<BucketClass> allBuckets= _db.Bucket.getSpecifics(u=>u.User_id==UserId,prop: "Product").ToList();
+            List<OrderhasProducts> allBuckets= _db.Orderhasproduct.getSpecifics(u=>u.User_id == UserId && u.Order_id==null,prop: "Product").ToList();
             return new JsonResult(allBuckets);
         }
 
-        public IActionResult bucketAdd(BucketClass obj)
+        public IActionResult Orderhasproductadd(OrderHasProduct_string obj)
         {
-            obj.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            obj.Order_product.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ModelState.IsValid)
             {
-                if(obj.Id==0)
+                if (obj.Order_product.Id == 0)
                 {
-                    _db.Bucket.Add(obj);
+                    _db.Orderhasproduct.Add(obj.Order_product);
                     _db.Save();
+                    try
+                    {
+                        for (int i = 0; i < obj.Order_product.Quantity; i++)
+                        {
+                            StockClass stockClass = new StockClass();
+                            stockClass.Order_Products_id = obj.Order_product.Id;
+                            stockClass.serial_number = obj.serial_no[i];
+                            stockClass.Product_id = obj.Order_product.Product_id;
+                            stockClass.InStock = "T";
+                            _db.Stock.Add(stockClass);
+                        }
+                        _db.Save();
+                    }
+                    catch (Exception ex) 
+                    {
+                        _db.Orderhasproduct.Delete(obj.Order_product);
+                        _db.Save();
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Invalid Serial number" + ex.Message
+                        });
+                    }
                     return Json(new
                     {
                         success = true,
@@ -95,43 +118,122 @@ namespace Track.Controllers
                 }
                 else
                 {
-                    BucketClass buck = _db.Bucket.GetOne(u => u.Id == obj.Id,prop:null);
-                    if(buck !=null)
+                    OrderhasProducts buck = _db.Orderhasproduct.GetOne(u => u.Id == obj.Order_product.Id, null);
+                    _db.Save();
+                    if (buck != null)
                     {
-                        buck.Product_id = obj.Product_id;
-                        buck.Quantity= obj.Quantity;
-                        _db.Bucket.Update(buck);
-                        _db.Save();
+                        _db.Orderhasproduct.Update(obj.Order_product);
+                        List<StockClass> man = _db.Stock.getSpecifics(u => u.Order_Products_id == buck.Id, null).ToList();
+
+                        int B_update = man.Count;
+
+                            if (B_update >= obj.Order_product.Quantity)
+                        {
+                            try
+                            {
+                                int check = 0;
+                                foreach (var item in man)
+                                {
+                                    if (check < obj.Order_product.Quantity)
+                                    {
+
+                                        item.serial_number = obj.serial_no[check];
+                                        _db.Stock.Update(item);
+                                        check++;
+                                    }
+                                    else
+                                    {
+                                        _db.Stock.Delete(item);
+                                    }
+                                    
+                                }
+                                _db.Save();
+
+                            }
+                            catch(Exception ex)
+                            {
+                                return Json(new
+                                {
+                                    success = false,
+                                    message = "Invalid Serial no" + ex.Message,
+                                });
+                            }
+                                                        
+                            return Json(new
+                            {
+                                success = true,
+                                message = "Product Updated"
+                            });
+                        }
+                        else
+                        {
+                            int additional_required = obj.Order_product.Quantity - B_update;
+                            int check = 0;
+                            //try
+                            {
+                                foreach (var item in man)
+                                {
+                                    if (check < obj.Order_product.Quantity)
+                                    {
+
+                                        item.serial_number = obj.serial_no[check];
+                                        _db.Stock.Update(item);
+                                        check++;
+                                    }
+                                }
+                                for (int i = check; i < obj.Order_product.Quantity; i++)
+                                {
+                                    StockClass addStock = new StockClass();
+                                    addStock.Order_Products_id = obj.Order_product.Id;
+                                    addStock.serial_number = obj.serial_no[i];
+                                    addStock.Product_id = obj.Order_product.Product_id;
+                                    addStock.InStock = "T";
+                                    _db.Stock.Add(addStock);
+                                }
+                                _db.Save();
+                            }
+                            //catch(Exception ex)
+                            //{
+                            //    return Json(new
+                            //    {
+                            //        success = false,
+                            //        message = "Invalid Sql" + ex.Message
+                            //    });
+                            //}
+                           
+                            return Json(new
+                            {
+                                success = true,
+                                message = "Product Updated"
+                            });
+                        }
+                    }
+                    else
+                    {
                         return Json(new
                         {
-                            success = true,
-                            message = "Product Updated"
+                            success = false,
+                            message = "Product Not found"
                         });
                     }
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Product not found"
-                    });
-
                 }
             }
             else
             {
-                return Json(new
+                return new JsonResult(new
                 {
-                    success=false,
-                    message="Modal State was not valid"
+                    success = false,
+                    message = "Modal State was not valid"
                 });
             }
         }
 
-        public IActionResult DeleteBucket(int? id)
+        public IActionResult DeleteOrderhasproduct(int? id)
         {
-            BucketClass To_Delete = _db.Bucket.GetOne(u => u.Id == id, prop: null);
+            OrderhasProducts To_Delete = _db.Orderhasproduct.GetOne(u => u.Id == id, prop: null);
             if (To_Delete != null)
             {
-                _db.Bucket.Delete(To_Delete);
+                _db.Orderhasproduct.Delete(To_Delete);
                 _db.Save();
                 return Json(new
                 {
@@ -245,7 +347,7 @@ namespace Track.Controllers
                 {
                     StockClass one = new StockClass();
                     one.Id = data.id;
-                    one.Order_id= data.order_id;
+                  
                     if(data.customer_id==0)
                     {
                         one.Customer_id =null;
@@ -303,7 +405,16 @@ namespace Track.Controllers
             return new JsonResult(list);
         }
 
+        public JsonResult SerialId(int? id)
+        {
+            List<string> myStock = _db.Stock.getSpecifics(u => u.Order_Products_id == id, prop: null).Select(u=>u.serial_number).ToList();
+            return Json(new
+            {
+                success=true,
+                value=myStock
+            });
 
+        }
         public IActionResult Deletestock(int? id)
         {
             StockClass To_Delete = _db.Stock.GetOne(u => u.Id == id, prop: null);
@@ -331,6 +442,11 @@ namespace Track.Controllers
             OrderClass To_delete = _db.Order.GetOne(u => u.Id == id, prop: null);
             if(To_delete != null) 
             {
+                List<OrderhasProducts> myOrder = _db.Orderhasproduct.getSpecifics(u => u.Order_id == id, null).ToList();
+                foreach(var data in myOrder)
+                {
+                    _db.Orderhasproduct.Delete(data);
+                }
                 _db.Order.Delete(To_delete);
                 _db.Save();
                 return Json(new
@@ -358,26 +474,19 @@ namespace Track.Controllers
                     _db.Order.Add(man);
                     _db.Save();
                     string User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    List<BucketClass> buckets = _db.Bucket.getSpecifics(u=>u.User_id==User_id,null).ToList();
+                    List<OrderhasProducts> buckets = _db.Orderhasproduct.getSpecifics(u=>u.User_id==User_id && u.Order_id==null,null).ToList();
                  
                     foreach ( var a in buckets)
                     {
-                        OrderhasProducts one = new OrderhasProducts();
-                        one.Product_id = Convert.ToInt32(a.Product_id);
-                        one.Order_id = man.Id;
-                        one.Quantity = Convert.ToInt32(a.Quantity);
-                        for (int i = 0; i < a.Quantity; i++)
+                        a.Order_id = man.Id;
+                        List<StockClass> man2= _db.Stock.getSpecifics(u=>u.Order_Products_id==a.Id, null).ToList();
+                        foreach ( var b in man2)
                         {
-                            StockClass Stock= new StockClass();
-                            Stock.Product_id = one.Product_id;
-                            Stock.Order_id = man.Id;
-                            Stock.InStock = "Y";
-                            Stock.isDamaged="T";
-                            _db.Stock.Add(Stock);   
+                            b.InStock = "Y";
+                            _db.Stock.Update(b);
                         }
-                        _db.Orderhasproduct.Add(one);
+                        _db.Orderhasproduct.Update(a);
                     }
-                    _db.Bucket.DeleteMost(buckets);
                     _db.Save();
                     return Json(new
                     {

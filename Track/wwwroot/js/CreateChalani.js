@@ -13,6 +13,8 @@ $(document).ready(function () {
     $("#ProductName").change(function () {
         Getit();
     });
+
+
 });
 
 
@@ -89,8 +91,6 @@ function fillCustomer() {
             }
         }
     });
-    
-
 }
 function reloadTable() {
     var ID = $("#MainId").val();
@@ -131,13 +131,22 @@ function Getit() {
             if (result.success) {
                 var Obj = "";
                 result.value.forEach(function (item, index) {
-                    Obj += ' <div class="form-group">\
-            <label>Serial no of Product ' + item.id + '</label>\
-                <input type="number" hidden id="I-'+ index + '" value="' + item.id + '">\
-                <input type="text" class="form-control" id="S-'+ index + '" value="' + item.value + '" placeholder="Serial no">\
-                </div>';
+                    Obj += '<div class="form-row align-items-center">\
+    		<div class="col-auto">\
+       			 <label>Serial no of Product ' + item.id + '</label>\
+        		<input type="number" hidden id="I-' + index + '" value="' + item.id + '">\
+                        <input type = "text" class="form-control" id = "S-' + index + '" value = "' + item.value + '" placeholder = "Serial no" >\
+            </div>\
+    		<div class="col-auto">\
+                        <label for="inlineRadio1">Is Damaged</label>\
+                        <input class="form-check-input ml-3" type="radio" name="options" id="inlineRadio1-' + index + '" value="' + item.id +'">\
+            </div>\
+        		</div >\
+	</div > ';
+
                 });
                 $("#tada").html(Obj);
+                AddPrompt();
             }
             else {
                 $("#tada").empty();
@@ -146,7 +155,34 @@ function Getit() {
         }
     });
 }
-
+function AddPrompt() {
+   $('input[name="options"]').on('change', function () {
+       let person = prompt("Please enter Damaged Reason");
+      if (person != null)
+      {
+          var selectedOption = $('input[name="options"]:checked').val();
+          UpdateDamaged(selectedOption, person);
+      }
+    });
+}
+function UpdateDamaged(lili, message)
+{
+    var URL = '/product/upStock?id=' + lili + '&message=' + encodeURIComponent(message);
+    $.ajax({
+        url: URL,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/ json; charset = utf - 8;',
+        success: function (result) {
+            if (result.success) {
+                Getit();
+            }
+            else {
+                toastr["error"](result.message, "Something went wrong", { timeOut: 5000 });
+            }
+        }
+    });
+}
 function Delete(Url) {
 
     $.confirm({
@@ -175,6 +211,7 @@ function Edit(i, product, quantity) {
     $("#ID").val(i);
     $("#ProductName").val(product);
     $("#Quantity").val(quantity);
+    $("#ProductName").prop("disabled", true);
     Getit();
 }
 
@@ -182,5 +219,6 @@ function Add() {
     $("#ID").val(0);
     $("#ProductName").val(0);
     $("#Quantity").val(0);
+    $("#ProductName").prop("disabled", false);
     Getit();
 }

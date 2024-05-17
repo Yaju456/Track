@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model BillClass
+<form id="Client">
+
+    <div class="form-row">
+        <input hidden asp-for="@Model.Id" id="Bill_id" />
+        <div class="form-group col-md-4">
+            <label for="ClientName">Customer Name</label>
+            <input disabled asp-for="@Model.Customer.Name" id="ClientName" class="form-control">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="ClientNumber">Customer Number</label>
+            <input disabled asp-for="@Model.Customer.PhoneNumber" class="form-control" />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="Bill_no">Bill No</label>
+            <input type="text" class="form-control" id="Bill_no" asp-for="@Model.Billno" placeholder="Bill No" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="Description">Date</label>
+            <input type="date" class="form-control" asp-for="@Model.Date" id="BDate" placeholder="Bill Date" />
+        </div>
+
+        <input asp-for="@Model.total" hidden id="sub-total" />
+        <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
+
+            <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i> Generate Report</button>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Rate
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total
+            </th>
+        </tr>
+    </thead>
+    <tbody id="t-body">
+    </tbody>
+</table>
+@section Scripts
+{
+    <script src="~/js/chalanitobill.js"></script>
+}

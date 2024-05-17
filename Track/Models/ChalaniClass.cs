@@ -25,6 +25,8 @@ namespace Track.Models
 
         public string? Remarks { get; set; }
 
+        [StringLength(1)]
+        public string? BillCreated { get; set; }
         public int? Bill_id { get; set; }
         [ValidateNever]
         [ForeignKey(nameof(Bill_id))]

@@ -30,8 +30,20 @@ function dateSearch() {
 
                     Obj += '<td>' + value.customer.name + '</td>';
                     mySet.add(String(value.customer.name).toUpperCase());
-                    Obj += '<td> <a href="/Chalani/CreateChalani?id=' + value.id + '" class="btn btn-success">View</a>';
-                    Obj += '<td> <button class="btn btn-danger" onclick=Delete(' + value.id + ')>Delete</button><td>';
+                    if (value.billCreated != 'Y') {
+                        Obj += '<td> <a href="/Chalani/CreateChalani?id=' + value.id + '" class="btn btn-success">View</a></td>';
+                    }
+                    else {
+                        Obj += '<td> <button class="btn btn-success disabled">View </button></td>';
+                    }
+                    Obj += '<td> <button class="btn btn-danger" onclick=Delete(' + value.id + ')>Delete</button></td>';
+                    
+                    if (value.billCreated != 'Y') {
+                        Obj += '<td> <a class="btn btn-danger" href="/ChalaniToBill/CtoB?id=' + value.id + '">Generate Bill</a></td>';
+                    }
+                    else {
+                        Obj += '<td> <a class="btn btn-danger" href="/bill/check?id=' + value.bill_id + '">View Bill</a></td>';
+                    }
                     Obj += '</tr>';
                 }
             });
@@ -72,8 +84,21 @@ function LoadTable(mval) {
 
                     Obj += '<td>' + value.customer.name + '</td>';
                     mySet.add(String(value.customer.name).toUpperCase());
-                    Obj += '<td> <a href="/Chalani/CreateChalani?id=' + value.id + '" class="btn btn-success">View</a>';
-                    Obj += '<td> <button class="btn btn-danger" onclick=Delete(' + value.id + ')>Delete</button><td>';
+                    if (value.billCreated != 'Y') {
+                        Obj += '<td> <a href="/Chalani/CreateChalani?id=' + value.id + '" class="btn btn-success">View</a></td>';
+                    }
+                    else {
+                        Obj += '<td> <button class="btn btn-success disabled">View </button></td>';
+                    }
+                    Obj += '<td> <button class="btn btn-danger" onclick=Delete(' + value.id + ')>Delete</button></td>';
+
+                    if (value.billCreated != 'Y') {
+                        Obj += '<td> <a class="btn btn-danger" href="/ChalaniToBill/CtoB?id=' + value.id + '">Generate Bill</a></td>';
+                    }
+                    else {
+                        Obj += '<td> <a class="btn btn-info" href="/bill/check?id=' + value.bill_id + '">View Bill</a></td>';
+                    }
+
                     Obj += '</tr>';
                 }
             });

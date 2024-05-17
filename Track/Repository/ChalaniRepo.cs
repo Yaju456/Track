@@ -25,6 +25,8 @@ namespace Track.Repository
                 data.Remarks=chalani.Remarks;
                 data.Customer_id=chalani.Customer_id;
                 data.Address=chalani.Address;   
+                data.Bill_id=chalani.Bill_id;
+                data.BillCreated=chalani.BillCreated;
                 _chalaniSet.Update(data);
             }
         }

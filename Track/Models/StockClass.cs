@@ -10,12 +10,6 @@ namespace Track.Models
         public int Id { get; set; }
 
         public string? serial_number { get; set; }
-
-         [Required]
-        public int Order_id { get; set; }
-        [ValidateNever]
-        [ForeignKey("Order_id")]
-        public OrderClass? Order { get; set; }
         public int? Customer_id { get; set; }
         [ValidateNever]
         [ForeignKey("Customer_id")]
@@ -42,5 +36,14 @@ namespace Track.Models
         [ValidateNever]
         [ForeignKey("chalanihasProduct_id")]
         public ChalanihasProductClass? ChalanihasProduct { get; set; }
+
+        [Required]
+        public int Order_Products_id { get; set; }
+        [ValidateNever]
+        [ForeignKey("Order_Products_id ")]
+        public OrderhasProducts OrderhasProducts { get; set; }
+
+        [StringLength(500)]
+        public string? Damaged_why { get; set; } 
     }
 }

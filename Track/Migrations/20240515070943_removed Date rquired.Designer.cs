@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Track.Data;
 
 namespace Track.Migrations
 {
     [DbContext(typeof(Applicationdbcontext))]
-    partial class ApplicationdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20240515070943_removed Date rquired")]
+    partial class removedDaterquired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,6 +231,7 @@ namespace Track.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Billno")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Customer_id")
@@ -249,8 +252,7 @@ namespace Track.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Billno")
-                        .IsUnique()
-                        .HasFilter("[Billno] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Customer_id");
 
@@ -332,10 +334,6 @@ namespace Track.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BillCreated")
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
 
                     b.Property<int?>("Bill_id")
                         .HasColumnType("int");
@@ -530,7 +528,7 @@ namespace Track.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Order_id")
+                    b.Property<int>("Order_id")
                         .HasColumnType("int");
 
                     b.Property<int>("Product_id")
@@ -539,17 +537,11 @@ namespace Track.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("User_id")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Order_id");
 
                     b.HasIndex("Product_id");
-
-                    b.HasIndex("User_id");
 
                     b.ToTable("OrderhasProducts");
                 });
@@ -667,16 +659,12 @@ namespace Track.Migrations
                     b.Property<int?>("Customer_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Damaged_why")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<string>("InStock")
                         .IsRequired()
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)");
 
-                    b.Property<int>("Order_Products_id")
+                    b.Property<int>("Order_id")
                         .HasColumnType("int");
 
                     b.Property<int>("Product_id")
@@ -699,7 +687,7 @@ namespace Track.Migrations
 
                     b.HasIndex("Customer_id");
 
-                    b.HasIndex("Order_Products_id");
+                    b.HasIndex("Order_id");
 
                     b.HasIndex("Product_id");
 
@@ -932,7 +920,9 @@ namespace Track.Migrations
                 {
                     b.HasOne("Track.Models.OrderClass", "Order")
                         .WithMany()
-                        .HasForeignKey("Order_id");
+                        .HasForeignKey("Order_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Track.Models.ProductClass", "Product")
                         .WithMany()
@@ -940,15 +930,9 @@ namespace Track.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("User_id");
-
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Track.Models.PaymentClass", b =>
@@ -974,9 +958,9 @@ namespace Track.Migrations
                         .WithMany()
                         .HasForeignKey("Customer_id");
 
-                    b.HasOne("Track.Models.OrderhasProducts", "OrderhasProducts")
+                    b.HasOne("Track.Models.OrderClass", "Order")
                         .WithMany()
-                        .HasForeignKey("Order_Products_id")
+                        .HasForeignKey("Order_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1000,7 +984,7 @@ namespace Track.Migrations
 
                     b.Navigation("Customer");
 
-                    b.Navigation("OrderhasProducts");
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
                 });

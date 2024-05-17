@@ -40,6 +40,42 @@ namespace Track.Controllers
             _db.Save();
             return new JsonResult(Products);
         }
+
+        public IActionResult OnRepair()
+        {
+            ViewBag.ActivePage = "Onrepair";
+            return View();
+        }
+        public JsonResult Damaged()
+        {
+            List<StockClass> myList = _db.Stock.getSpecifics(u => u.isDamaged != null, null).ToList();
+            return Json(myList);
+        }
+        public JsonResult UpDamage(int? id, string? message,int d)
+        {
+            try
+            {
+                StockClass man = _db.Stock.GetOne(u => u.Id == id, null);
+                if(d==1)
+                {
+                    man.isDamaged = null;
+                }
+                man.Damaged_why = message;
+                _db.Stock.Update(man);
+                _db.Save();
+                return Json(new {
+                    success = true,
+                });
+            }
+            catch(Exception ex) 
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                });
+            }
+        }
         public IActionResult Index()
         {
             ViewBag.ActivePage = "Product";
@@ -53,6 +89,37 @@ namespace Track.Controllers
             ViewBag.CompanyName = CompanyName;
             ViewBag.CatagoryType = CatagoryType;
             return View();
+        }
+        public JsonResult upStock(int? id, string? message)
+        {
+            try
+            {
+                StockClass one = _db.Stock.GetOne(u => u.Id == id, null);
+                one.isDamaged = "N";
+                one.Damaged_why = message;
+                if(one.chalanihasProduct_id!=null)
+                {
+                    int iId = Convert.ToInt32(one.chalanihasProduct_id);
+                    one.chalanihasProduct_id = null;
+                    StockClass two = _db.Stock.GetOne(u => u.InStock == "Y" && u.Product_id==one.Product_id && u.isDamaged==null && u.chalanihasProduct_id==null, null);
+                    two.chalanihasProduct_id=iId;
+                    _db.Stock.Update(two);
+                }
+                _db.Stock.Update(one);
+                _db.Save();
+                return Json(new
+                {
+                    success = true,
+                });
+            }
+            catch (Exception ex) 
+            {
+                return Json(new { 
+                    success=false,
+                    message=ex.Message,
+                });
+            }
+            
         }
         [HttpPost]
         public IActionResult Index(ProductClass obj, IFormFile? file)
@@ -129,7 +196,7 @@ namespace Track.Controllers
                     return Json(new
                     {
                         success = false,
-                        Message = "There was an error deleting"
+                        message = "There was an error deleting"
                     });
                 }
             }
@@ -138,7 +205,7 @@ namespace Track.Controllers
                 return Json(new
                 {
                     success = false,
-                    Message = ex.Message
+                    message = ex.Message
                 });
             }
             

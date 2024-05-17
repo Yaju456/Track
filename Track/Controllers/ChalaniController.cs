@@ -164,15 +164,21 @@ namespace Track.Controllers
             ViewBag.CustomerNumber = CustomerNumber;
             ViewBag.ProductName = ProductName;
             ChalaniClass value = _db.Chalani.GetOne(u => u.Id == id, null);
-            if(value != null) 
+
+            if(value == null) 
             {
-                return View(value);
-            }
-            else 
-            { 
                 ChalaniClass lili = new ChalaniClass();
                 lili.Id = 0;
                 return View(lili);
+            }
+            else if(value.BillCreated=="Y")
+            {
+                return RedirectToAction("Index");
+            }
+            else 
+            { 
+                return View(value);
+
             }
         }
 
@@ -279,51 +285,21 @@ namespace Track.Controllers
                     else
                     {
                         List<StockClass> man = _db.Stock.getSpecifics(u => u.chalanihasProduct_id == obj.Class.Id, null).ToList();
-                        int B_update = man.Count;
-
-                        if (B_update >= obj.Class.Quantity)
+                        foreach(var item in man) 
                         {
-                            int check = 0;
-                            foreach (var item in man)
-                            {
-                                if (check < obj.Class.Quantity && obj.Serial_no.Select(u => u.Id).Contains(item.Id))
-                                {
-
-                                    item.serial_number = obj.Serial_no[check].Value.ToString();
-                                    item.InStock = "N";
-                                    check++;
-                                }
-                                else
-                                {
-                                    item.serial_number = null;
-                                    item.chalanihasProduct_id = null;
-                                    item.InStock = "Y";
-                                }
-                                _db.Stock.Update(item);
-                            }
+                            item.chalanihasProduct_id = null;
+                            item.InStock="Y";
+                            _db.Stock.Update(item);                       
                         }
-                        else
+                        _db.Save();
+                        foreach(var item in obj.Serial_no)
                         {
-                            int additional_required = obj.Class.Quantity - B_update;
-                            int Instock_count = _db.Stock.getSpecifics(u => u.InStock == "Y" && u.Product_id == obj.Class.product_id && u.chalanihasProduct_id == null, null).Count();
-                            if (Instock_count < additional_required)
-                            {
-                                throw new Exception("Not Enough Item avaibale in Stock");
-                            }
-                            foreach (var item in obj.Serial_no)
-                            {
-                                StockClass man1 = _db.Stock.GetOne(u => u.Id == item.Id, null);
-                                if (!(man1.InStock == "Y" || man1.chalanihasProduct_id == obj.Class.Id))
-                                {
-                                    throw new Exception("Given Item of product no " + item.Id + " has alread been out of stock enter again");
-                                }
-                                man1.chalanihasProduct_id = obj.Class.Id;
-                                man1.serial_number = obj.Serial_no.FirstOrDefault(u => u.Id == item.Id).Value;
-                                man1.InStock = "N";
-                                _db.Stock.Update(man1);
-                            }
-
+                            StockClass stock = _db.Stock.GetOne(u => u.Id == item.Id, null);
+                            stock.serial_number = item.Value;
+                            stock.chalanihasProduct_id = obj.Class.Id;
+                            _db.Stock.Update(stock);
                         }
+                        _db.Save();
                         if(obj.chalani_no!=0)
                         {
                             obj.Class.Chalani_id= obj.chalani_no;

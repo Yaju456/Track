@@ -204,7 +204,7 @@ $("#PaymentForm").on("submit", function (e) {
         amount: Amount,
         date: pDate,
         bill_id: Bill_id,
-        commissionper: commission,
+        commission: commission,
         UserId: User_id
     }
     console.log(obj);

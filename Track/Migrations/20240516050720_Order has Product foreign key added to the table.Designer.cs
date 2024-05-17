@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Track.Data;
 
 namespace Track.Migrations
 {
     [DbContext(typeof(Applicationdbcontext))]
-    partial class ApplicationdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20240516050720_Order has Product foreign key added to the table")]
+    partial class OrderhasProductforeignkeyaddedtothetable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,6 +231,7 @@ namespace Track.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Billno")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Customer_id")
@@ -249,8 +252,7 @@ namespace Track.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Billno")
-                        .IsUnique()
-                        .HasFilter("[Billno] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("Customer_id");
 
@@ -666,10 +668,6 @@ namespace Track.Migrations
 
                     b.Property<int?>("Customer_id")
                         .HasColumnType("int");
-
-                    b.Property<string>("Damaged_why")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("InStock")
                         .IsRequired()

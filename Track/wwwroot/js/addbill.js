@@ -77,6 +77,15 @@ function LoadTable(mval) {
                     mySet.add(String(value.customer.name).toUpperCase());
                     if (value.payment == null || value.payment == 0) {
                         Obj += '<td style="text-align: center;"><i class="text-danger bi bi-x-circle h1"></i></td>';
+                        let date = new Date();
+                        var diffInMilliseconds = Math.abs(new Date(value.date) - date);
+                        console.log(diffInMilliseconds);
+                        var diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+                        console.log(diffInDays);
+                        if (diffInDays > 5) {
+                            toastr["warning"](value.billno + " Bill still not clear after 5 days", "Unpaid Bill", { timeOut: 5000 });
+                        }
+                    
                     }
                     else if (value.payment < (value.total - value.total * 0.015)) {
                         Obj += '<td style="text-align: center;"><i class="text-warning bi bi-arrow-clockwise h1"></i></td>';

@@ -76,8 +76,8 @@ function reloadTable(wh, mval) {
                 if (wh == 0 || one == mval) {
 
                     Obj += '<tr>';
-                    Obj += '<td>' + value.order_id + '</td>';
-                    order_no.add(value.order_id);
+                    Obj += '<td>' + value.orderhasProducts.order_id + '</td>';
+                    order_no.add(value.orderhasProducts.order_id);
                     Obj += '<td>' + value.product_id + '</td>';
                     Obj += '<td>' + value.serial_number + '</td>';
                     Serial_no.add(value.serial_number);

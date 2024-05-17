@@ -20,8 +20,8 @@ namespace Track.Repository
             StockClass one = _stock.FirstOrDefault(a=>a.Id==stock.Id);
             if (one!=null) 
             {
-                one.Order_id=stock.Order_id;
                 one.Customer_id=stock.Customer_id;
+                one.billhasProduct_id=stock.billhasProduct_id;
                 one.Product_id=stock.Product_id;
                 one.billhasProduct_id=stock.billhasProduct_id;
                 one.isDamaged=stock.isDamaged;

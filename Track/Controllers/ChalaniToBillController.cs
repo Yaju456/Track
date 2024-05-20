@@ -33,7 +33,7 @@ namespace Track.Controllers
                 {
                     
                     BillClass myBill = new BillClass();
-                    if(to_generate.Bill_id==null)
+                    if (to_generate.Bill_id == null)
                     {
                         myBill.Customer_id = to_generate.Customer_id;
                         myBill.Billno = null;
@@ -43,33 +43,30 @@ namespace Track.Controllers
                         myBill.Billno = "T-" + myBill.Id;
                         to_generate.Bill_id = myBill.Id;
                         _db.Chalani.Update(to_generate);
+                        List<ChalanihasProductClass> Chalani = _db.Chalanihasproduct.getSpecifics(u => u.Chalani_id == id, null).ToList();
+                        foreach (var chal in Chalani)
+                        {
+                            BillhasProductClass show = new BillhasProductClass();
+                            show.Bill_id = myBill.Id;
+                            show.product_id = chal.product_id;
+                            show.Quantity = chal.Quantity;
+                            show.Rate = 0;
+                            show.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                            _db.Billhasproduct.Add(show);
+                            _db.Save();
+
+                            List<StockClass> to_changeBillid = _db.Stock.getSpecifics(u => u.chalanihasProduct_id == chal.Id, null).ToList();
+                            foreach (var stak in to_changeBillid)
+                            {
+                                stak.billhasProduct_id = show.Id;
+                                _db.Stock.Update(stak);
+                            }
+                            _db.Save();
+                        }
                     }
                     else
                     {
                         myBill = _db.Bill.GetOne(u => u.Id == to_generate.Bill_id, null);
-                        _db.Billhasproduct.DeleteMost(_db.Billhasproduct.getSpecifics(u=>u.Bill_id==myBill.Id, null).ToList());
-                        _db.Save();
-                    }
-                   
-                    List<ChalanihasProductClass> Chalani = _db.Chalanihasproduct.getSpecifics(u => u.Chalani_id == id, null).ToList();
-                    foreach(var chal in Chalani)
-                    {
-                        BillhasProductClass show= new BillhasProductClass();
-                        show.Bill_id=myBill.Id;
-                        show.product_id=chal.product_id;
-                        show.Quantity = chal.Quantity;
-                        show.Rate = 0;
-                        show.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        _db.Billhasproduct.Add(show);
-                        _db.Save();
-
-                        List<StockClass> to_changeBillid= _db.Stock.getSpecifics(u=>u.chalanihasProduct_id==chal.Id, null).ToList();
-                        foreach(var stak in to_changeBillid)
-                        {
-                            stak.billhasProduct_id = show.Id;
-                            _db.Stock.Update(stak);
-                        }
-                        _db.Save();
                     }
                     return RedirectToAction("Index", new {id = myBill.Id});
                 }

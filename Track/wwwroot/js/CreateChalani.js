@@ -210,7 +210,6 @@ function Delete(Url) {
                         toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
                         reloadTable();
                     },
-
                 })
             },
             cancel: function () {

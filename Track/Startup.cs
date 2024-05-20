@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Track.Data;
 using Track.Repository.Irepository;
 using Track.Repository;
+using Newtonsoft.Json;
 
 namespace Track
 {
@@ -44,6 +45,11 @@ namespace Track
             services.AddScoped<IunitOfwork, UnitofWork>();
             services.AddRazorPages();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

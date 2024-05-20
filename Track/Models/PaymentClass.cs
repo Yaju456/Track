@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Track.Models
 {
@@ -21,10 +23,10 @@ namespace Track.Models
         public float? commission { get; set; }
         [StringLength(450)]
 
+       
         [Required]
-        public string? UserId { get; set; }
-        [Required]
-        public DateTime? Date {  get; set; }
+        [JsonConverter(typeof(IsoDateTimeConverter))]
+        public DateTime? PDate {  get; set; }
 
         [Required]
         public int Bill_id { get; set; }
@@ -32,8 +34,6 @@ namespace Track.Models
         [ForeignKey(nameof(Bill_id))]
         public BillClass? Bill { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public IdentityUser? User { get; set; }
-
+        public string? Commissino_to { get; set;}
     }
 }

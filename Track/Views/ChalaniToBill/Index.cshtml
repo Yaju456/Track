@@ -4,6 +4,42 @@
 @{
 }
 @model BillClass
+
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <from id="service">
+                    <div class="form-group">
+                        <lable for="NService">Service: </lable>
+                        <input type="text" class="form-control" id="NService"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="rate">Rate</label>
+                        <input type="number" class="form-control" id="rate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" />
+                    </div>
+                    <button onclick=onClickme() class="btn btn-primary">Submit</button>
+                </from>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <form id="Client">
 
     <div class="form-row">
@@ -32,6 +68,10 @@
         <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
 
             <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i> Generate Report</button>
+        </div>
+        <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
+
+            <a class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong"><i class="bi bi-file-bar-graph-fill"></i> Add Service</a>
         </div>
     </div>
 </form>

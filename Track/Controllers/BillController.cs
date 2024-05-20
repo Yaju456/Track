@@ -151,14 +151,14 @@ namespace Track.Controllers
 
         public JsonResult lokPay(int? id)
         {
-            var list = _db.Payment.getSpecifics(u => u.Bill_id == id, prop: "User").Select(u=> new {
+            var list = _db.Payment.getSpecifics(u => u.Bill_id == id, null).Select(u=> new {
                 id=u.Id,
-                date= u.Date,
+                date= u.PDate,
                 method=u.Method,
                 amount=u.Amount,
                 commission=Convert.ToString(u.commission),
                 commissionper=Convert.ToString(u.commissionper),
-                userName=Convert.ToString(u.User.UserName)
+                commissino_to = Convert.ToString(u.Commissino_to)
             }).ToList();
             return Json(list);
         }

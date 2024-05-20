@@ -28,5 +28,7 @@ namespace Track.Models
         [ValidateNever]
         [ForeignKey("LocalBodyId")]
         public LocalBodyClass? LocalBody { get; set; }
+        
+        public string? Address { get; set; }    
     }
 }

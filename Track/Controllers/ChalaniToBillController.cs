@@ -40,6 +40,7 @@ namespace Track.Controllers
                         myBill.total = 0;
                         _db.Bill.Add(myBill);
                         _db.Save();
+                        myBill.Billno = "T-" + myBill.Id;
                         to_generate.Bill_id = myBill.Id;
                         _db.Chalani.Update(to_generate);
                     }
@@ -136,6 +137,66 @@ namespace Track.Controllers
                 {
                     success = false,
                     message = ex.Message,
+                });
+            }
+            
+        }
+
+        public JsonResult DeleteService(int id)
+        {
+            BillhasProductClass data = _db.Billhasproduct.GetOne(u => u.Id == id, null);
+            if(data!=null)
+            {
+                _db.Billhasproduct.Delete(data);
+                _db.Save();
+                return Json(new
+                {
+                    success = true,
+                    message = "Service Deleted from the bill"
+                });
+            }
+            else
+            {
+                return Json(new
+                {
+                    success=false,
+                    message="Something went wrong no data available"
+                });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddService(BillhasProductClass obj)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    obj.total = obj.Quantity * obj.Rate;
+                    obj.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    _db.Billhasproduct.Add(obj);
+                    _db.Save();
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Service Added Succesfully"
+                    });
+                }
+                catch(Exception ex)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = ex.Message,
+                    });
+                }
+            }
+            else
+            {
+                return Json(new
+                {
+                    success=false,
+                    message="Modal state not valid"
                 });
             }
             

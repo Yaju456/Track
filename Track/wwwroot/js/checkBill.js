@@ -18,7 +18,7 @@ function PView() {
                 Obj += '<td>' + value.amount + '</td>';
                 Obj += '<td>' + value.commission + '</td>';
                 Obj += '<td>' + value.commissionper + ' %</td>';
-                Obj += '<td>' + value.userName + ' </td>';
+                Obj += '<td>' + value.commissino_to + ' </td>';
                 Obj += '<td><a class="btn btn-danger" onclick=DeletePayment(' + value.id + ')>Delete</a>';
                 Obj += '</td>';
             });
@@ -147,7 +147,12 @@ function reloadTable() {
             var total = 0;
             $.each(result, function (index, value) {
                 Obj += '<tr>';
-                Obj += '<td>' + value.product.name + '</td>';
+                if (value.product === null) {
+                    Obj += '<td>' + value.extra_items + '</td>';
+                }
+                else {
+                    Obj += '<td>' + value.product.name + '</td>';
+                }
                 Obj += '<td>' + value.rate + '</td>';
                 Obj += '<td>' + value.quantity + '</td>';
                 Obj += '<td>' + value.total + '</td>';
@@ -189,28 +194,32 @@ function reloadTable() {
     });
 }
 
+function printThisq() {
+    $("#Toprint").printThis();
+}
+
 $("#PaymentForm").on("submit", function (e) {
     e.preventDefault();
     var Id = 0;
     var Mthod = $("#Pmethod").val();
     var Amount = $("#PAmount").val();
-    var pDate = $("#PDate").val();
+    var PDate = $("#PDate").val();
     var Bill_id = $("#Bid").val();
-    var User_id = $("#Userid").val();
+    var User_id = $("#sold_By").val();
     var commission = $("#Commission").val();
     var obj = {
         id: Id,
         method: Mthod,
         amount: Amount,
-        date: pDate,
-        bill_id: Bill_id,
         commission: commission,
-        UserId: User_id
+        pDate: PDate,
+        bill_id: Bill_id,
+        commissino_to: User_id
     }
     console.log(obj);
     $.ajax({
         url: '/bill/Paid',
-        type: 'Post',
+        type: 'POST',
         dataType: 'json',
         data: obj,
         success: function (response) {
@@ -225,8 +234,8 @@ $("#PaymentForm").on("submit", function (e) {
             }
         },
         error: function (xhr, textStatus, error) {
-            console.log("error");
-            alert(xhr.statusText);
+            //console.log("error");
+            //alert(xhr.statusText);
             console.log(textStatus);
             console.log(error);
         }

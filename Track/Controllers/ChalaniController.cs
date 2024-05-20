@@ -157,7 +157,7 @@ namespace Track.Controllers
             });
             IEnumerable<SelectListItem> ProductName = _db.Product.getAll(null).Select(u => new SelectListItem
             {
-                Text = u.Name,
+                Text = u.Name+" "+u.Modal,
                 Value = u.Id.ToString(),
             });
             ViewBag.CustomerName = CustomerName;

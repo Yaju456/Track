@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Track.Data;
 
 namespace Track.Migrations
 {
     [DbContext(typeof(Applicationdbcontext))]
-    partial class ApplicationdbcontextModelSnapshot : ModelSnapshot
+    [Migration("20240519070803_Address_change")]
+    partial class Address_change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,9 +268,6 @@ namespace Track.Migrations
 
                     b.Property<int?>("Bill_id")
                         .HasColumnType("int");
-
-                    b.Property<string>("Extra_items")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -569,17 +568,18 @@ namespace Track.Migrations
                     b.Property<int>("Bill_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Commissino_to")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("Date")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Method")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("PDate")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(450)
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<float?>("commission")
                         .HasColumnType("real");
@@ -590,6 +590,8 @@ namespace Track.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Bill_id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payment");
                 });
@@ -958,7 +960,13 @@ namespace Track.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Bill");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Track.Models.StockClass", b =>

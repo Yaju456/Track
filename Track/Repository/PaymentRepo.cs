@@ -20,7 +20,7 @@ namespace Track.Repository
             if (obj != null) 
             {
                 obj.Bill_id = payment.Bill_id;
-                obj.Date = payment.Date;
+                obj.PDate = payment.PDate;
                 obj.Method = payment.Method;
                 obj.Amount = payment.Amount;
                 _paymentClasses.Update(obj);

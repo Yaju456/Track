@@ -18,8 +18,6 @@ namespace Track.Models
         [ForeignKey(nameof(Customer_id))]
         public CustomerClass? Customer { get; set; }
 
-        [Required]
-        public string? Address{ get; set;}
         [Range(9800000000, 9899999999)]
         public long? PhoneNumber { get; set;}
 

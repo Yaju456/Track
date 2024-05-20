@@ -2,6 +2,11 @@
 $(document).ready(function () {
 
     reloadTable();
+    let lili = new Date();
+    let day = ("0" + lili.getDate()).slice(-2);
+    let month = ("0" + (lili.getMonth() + 1)).slice(-2);
+
+    $("#BDate").val(lili.getFullYear() + "-" + month + "-" + day);
 });
 
 function caltot() {
@@ -42,7 +47,14 @@ function reloadTable() {
             $.each(result, function (index, value) {
                 protot++;
                 Obj += '<tr>';
-                Obj += '<td>' + value.product.name + '</td>';
+                if (value.product == null) {
+                    Obj += '<td>' + value.extra_items + '<button class="btn btn-danger" onclick=Delete(' + value.id+')\
+                            ><i class="bi bi-trash"></i></button></td>';
+                }
+                else
+                { 
+                    Obj += '<td>' + value.product.name + '</td>';
+                }
                 Obj += '<td style="width:15rem;"><input type="number" id="I-' + index + '"class="form-control" style="width:10rem" value="' + value.rate + '"/> </td>';
 
                 Obj += '<td id="Q-' + index + '">' + value.quantity + '</td >';
@@ -110,3 +122,57 @@ $("#Client").on("submit", function (e) {
         }
     });
 })
+
+function Delete(ID) {
+    var URL = '/chalanitobill/DeleteService?id=' + ID;
+    $.confirm({
+        title: 'Delete',
+        content: 'Are you sure?',
+        buttons: {
+            confirm: function () {
+                $.ajax({
+                    url: URL,
+                    type: 'delete',
+                    success: function (data) {
+                        toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
+                        reloadTable();
+                    },
+
+                })
+            },
+            cancel: function () {
+                $.alert('Canceled!');
+            }
+        }
+    });
+}
+function onClickme()
+{
+    let Id = 0;
+    let Bill_id = $("#Bill_id").val();
+    let service_name = $("#NService").val();
+    let Rate = $("#rate").val();
+    let Quantity = $("#quantity").val();
+    let obj = {
+        id: Id,
+        bill_id: Bill_id,
+        rate: Rate,
+        quantity: Quantity,
+        extra_items: service_name
+    };
+    $.ajax({
+        type: 'POST',
+        url: '/ChalaniToBill/addService',
+        data: 'json',
+        data: obj,
+        success: function (result) {
+            if (result.success) {
+                toastr["success"](result.message, "Service added", { timeOut: 5000 });
+                reloadTable();
+            }
+            else {
+                toastr["error"](reuslt.message, "Something went Wrong", { timeOut: 5000 });
+            }
+        }
+    });
+}

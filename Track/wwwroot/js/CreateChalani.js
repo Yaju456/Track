@@ -3,6 +3,7 @@ $(document).ready(function () {
     $("#ClientName").change(function () {
         var selectedOption = $(this).val();
         $("#ClientNumber").val(selectedOption);
+        $("#Address").val(selectedOption);
     });
     fillCustomer();
     fillOptions();
@@ -13,7 +14,14 @@ $(document).ready(function () {
     $("#ProductName").change(function () {
         Getit();
     });
+    var now = new Date();
 
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+    $('#SDate').val(today);
 
 });
 
@@ -79,15 +87,20 @@ function fillCustomer() {
             $('#ClientName').append('<option disabled selected value="0">--Select Customer--</option>');
             $("#ClientNumber").empty();
             $('#ClientNumber').append('<option disabled selected value="0">--Customer Number--</option>');
+            $("#Address").empty();
+            $('#Address').append('<option disabled selected value="0">--Customer Address--</option>');
             $.each(result, function (index, value) {
                 nameSet.add(String(value.name).toUpperCase());
                 $('#ClientName').append('<option value="' + value.id + '">' + value.name + '</option>');
                 $('#ClientNumber').append('<option value="' + value.id + '">' + value.phoneNumber + '</option>');
+                $('#Address').append('<option value="' + value.id + '">' + value.address+ '</option>');
+
 
             });
             if ($("#cusSelected").val()) {
                 $("#ClientName").val($("#cusSelected").val());
                 $("#ClientNumber").val($("#cusSelected").val());
+                $("#Address").val($("#cusSelected").val());
             }
         }
     });

@@ -27,7 +27,7 @@ namespace Track.Repository
             _dbset.Remove(obj);
         }
 
-        public void DeleteMost(List<T> list)
+        public virtual void DeleteMost(List<T> list)
         {
             _dbset.RemoveRange(list);
         }

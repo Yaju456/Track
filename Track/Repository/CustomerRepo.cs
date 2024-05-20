@@ -26,6 +26,7 @@ namespace Track.Repository
                 ToUpdate.DistrictId= customer.DistrictId;
                 ToUpdate.ProvinceId= customer.ProvinceId;
                 ToUpdate.LocalBodyId= customer.LocalBodyId;
+                ToUpdate.Address = customer.Address;
                 _dbSet.Update(ToUpdate);
             }
         }

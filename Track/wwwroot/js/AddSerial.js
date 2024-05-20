@@ -76,14 +76,18 @@ function reloadTable(wh, mval) {
                 if (wh == 0 || one == mval) {
 
                     Obj += '<tr>';
-                    Obj += '<td>' + value.orderhasProducts.order_id + '</td>';
-                    order_no.add(value.orderhasProducts.order_id);
-                    Obj += '<td>' + value.product_id + '</td>';
+                    Obj += '<td>' + value.product.modal + '</td>';
                     Obj += '<td>' + value.serial_number + '</td>';
                     Serial_no.add(value.serial_number);
                     Obj += '<td>' + value.product.name + '</td>';
                     product_name.add(value.product.name);
                     Obj += '<td>' + value.inStock + '</td>';
+                    if (value.isDamaged != null) {
+                        Obj += '<td><i class="text-danger bi bi-x-circle h1"></i></td>';
+                    }
+                    else {
+                        Obj += '<td><i class="text-success bi bi-check2-circle h1"></i></td>';
+                    }
                     Obj += '<td>' + String(value.customer_id) + '</td>';
                     if (value.customer_id != null) {
                         Obj += '<td>' + value.customer.name + '</td>';

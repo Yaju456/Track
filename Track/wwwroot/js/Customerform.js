@@ -144,13 +144,15 @@ $("#CustomerForm").on("submit", function (e) {
     var Province = $("#ProvinceOption").val();
     var District = $("#DistrictOption").val();
     var LocalBody = $("#LocalBodyOption").val();
+    var Address = $("#IAddress").val();
     var obj = {
         id: Id,
         name: Name,
         phoneNumber: PhoneNumber,
         provinceId: Province,
         districtId: District,
-        localBodyId: LocalBody
+        localBodyId: LocalBody,
+        address: Address
     };
 
     if (nameSet.has(Name.toUpperCase()) && Id == 0) {

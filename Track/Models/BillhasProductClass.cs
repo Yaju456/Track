@@ -24,5 +24,7 @@ namespace Track.Models
 
         [StringLength(450)]
         public string? User_id { get; set; }
+
+        public string? Extra_items{ get; set; }
     }
 }

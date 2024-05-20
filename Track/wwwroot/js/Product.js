@@ -25,6 +25,8 @@ function reloadTable(mval) {
                     mySet.add(String(value.id).toUpperCase());
                     Obj += '<td>' + value.name + '</td>';
                     mySet.add(String(value.name).toUpperCase());
+                    Obj += '<td>' + value.modal + '</td>';
+                    mySet.add(String(value.modal).toUpperCase());
                     Obj += '<td>' + value.description + '</td>';
                     mySet.add(String(value.description).toUpperCase());
                     Obj += '<td>' + value.category + '</td>';

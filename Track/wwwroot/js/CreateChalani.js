@@ -61,6 +61,7 @@ $("#AddProduct").on("submit", function (e) {
             if (response.success) {
                 toastr["success"](response.message, "Value Added", { timeOut: 5000 });
                 document.getElementById("AddProduct").reset();
+                $("#tada").empty();
                 reloadTable();
             }
             else {
@@ -152,7 +153,7 @@ function Getit() {
             </div>\
     		<div class="col-auto">\
                         <label for="inlineRadio1">Is Damaged</label>\
-                        <input class="form-check-input ml-3" type="radio" name="options" id="inlineRadio1-' + index + '" value="' + item.id +'">\
+                        <input class="form-check-input ml-3" type="checkbox" name="options" id="inlineRadio1-' + index + '" value="' + item.id +'">\
             </div>\
         		</div >\
 	</div > ';
@@ -169,18 +170,29 @@ function Getit() {
     });
 }
 function AddPrompt() {
-   $('input[name="options"]').on('change', function () {
-       let person = prompt("Please enter Damaged Reason");
-      if (person != null)
+    $('input[name="options"]').on('change', function () {
+        var person;
+        if ($(this).is(':checked'))
+        {
+            person = prompt("Please enter Damaged Reason");
+        }
+            if (person != null)
       {
-          var selectedOption = $('input[name="options"]:checked').val();
-          UpdateDamaged(selectedOption, person);
+                let damaged = [];
+
+                $('input[name="options"]:checked').each(function () {
+                    damaged.push($(this).val());
+                });
+                UpdateDamaged(damaged, person);
       }
     });
 }
 function UpdateDamaged(lili, message)
 {
-    var URL = '/product/upStock?id=' + lili + '&message=' + encodeURIComponent(message);
+    var URL = '/product/upStock?';
+    lili.forEach((data) =>
+        URL += 'id=' + data + '&');
+    URL+='&message=' + encodeURIComponent(message);
     $.ajax({
         url: URL,
         type: 'GET',

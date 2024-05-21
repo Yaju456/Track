@@ -25,7 +25,7 @@ namespace Track.Models
 
        
         [Required]
-        [JsonConverter(typeof(IsoDateTimeConverter))]
+        //[JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime? PDate {  get; set; }
 
         [Required]

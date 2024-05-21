@@ -64,7 +64,7 @@ function View(id) {
             $.each(result, function (index, value) {
                 Obj += '<tr>';
                 Obj += '<td>' + value.serial_number + '</td>';
-                Obj += '<td>' + value.order_id + '</td>';
+                Obj += '<td>' + value.id + '</td>';
                 Obj += '</td>';
             });
             $("#tm-body").html(Obj);
@@ -156,7 +156,7 @@ function reloadTable() {
                 Obj += '<td>' + value.rate + '</td>';
                 Obj += '<td>' + value.quantity + '</td>';
                 Obj += '<td>' + value.total + '</td>';
-                Obj += '<td> <button onclick=View(' + value.id + ') class="btn btn-success"  data-toggle="modal" data-target="#exampleModal">View</button> '; 
+                Obj += '<td class="no-print"> <button onclick=View(' + value.id + ') class="btn btn-success"  data-toggle="modal" data-target="#exampleModal">View</button> '; 
                 total += value.total;
                 Obj += '</tr>';
             });
@@ -198,30 +198,36 @@ function printThisq() {
     $("#Toprint").printThis();
 }
 
+function printBill() {
+    $("#billPrint").printThis();
+}
+
 $("#PaymentForm").on("submit", function (e) {
     e.preventDefault();
     var Id = 0;
     var Mthod = $("#Pmethod").val();
     var Amount = $("#PAmount").val();
-    var PDate = $("#PDate").val();
+    var HiDate = $("#PDate").val();
     var Bill_id = $("#Bid").val();
     var User_id = $("#sold_By").val();
     var commission = $("#Commission").val();
-    var obj = {
+    var Obj = {
         id: Id,
         method: Mthod,
         amount: Amount,
         commission: commission,
-        pDate: PDate,
         bill_id: Bill_id,
         commissino_to: User_id
     }
-    console.log(obj);
+    var man = {
+        obj: Obj,
+        hiDate: HiDate
+    }
     $.ajax({
         url: '/bill/Paid',
         type: 'POST',
         dataType: 'json',
-        data: obj,
+        data: man,
         success: function (response) {
             if (response.success) {
                 toastr["success"](response.message, "Payment Added", { timeOut: 5000 });

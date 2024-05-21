@@ -171,10 +171,10 @@ namespace Track.Controllers
                 lili.Id = 0;
                 return View(lili);
             }
-            else if(value.BillCreated=="Y")
-            {
-                return RedirectToAction("Index");
-            }
+            //else if(value.BillCreated=="Y")
+            //{
+            //    return RedirectToAction("Index");
+            //}
             else 
             { 
                 return View(value);
@@ -297,6 +297,7 @@ namespace Track.Controllers
                             StockClass stock = _db.Stock.GetOne(u => u.Id == item.Id, null);
                             stock.serial_number = item.Value;
                             stock.chalanihasProduct_id = obj.Class.Id;
+                            stock.InStock = "N";
                             _db.Stock.Update(stock);
                         }
                         _db.Save();

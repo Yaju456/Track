@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +26,7 @@ namespace Track.Controllers
             _db = db;
             _userManager = userManager;
         }
-        public IActionResult CreateBill()
+        public IActionResult CreateBill(int? id)
         {
             ViewBag.ActivePage = "Bill";
             IEnumerable<SelectListItem> CustomerName = _db.customer.getAll(null).Select(u=> new SelectListItem
@@ -39,13 +41,18 @@ namespace Track.Controllers
             });
             IEnumerable<SelectListItem> ProductName = _db.Product.getAll(null).Select(u => new SelectListItem
             {
-                Text = u.Name,
+                Text = u.Name+" "+u.Modal,
                 Value = u.Id.ToString(),
             });
             ViewBag.CustomerName=CustomerName;
             ViewBag.CustomerNumber=CustomerNumber;
             ViewBag.ProductName=ProductName;
-            return View();
+            BillClass myBill = _db.Bill.GetOne(u => u.Id == id, null);
+            if(myBill==null)
+            {
+                return View(new BillClass());
+            }
+            return View(myBill);
         }
 
         public JsonResult getCombill(int? id)
@@ -53,11 +60,19 @@ namespace Track.Controllers
             List<BillhasProductClass> data= _db.Billhasproduct.getSpecifics(u=>u.Bill_id==id, prop:"Product").ToList();
             return Json(data);
         }
-        public JsonResult getCom()
+        public JsonResult getCom(int? id)
         {
-            string? user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List<BillhasProductClass> data = _db.Billhasproduct.getSpecifics(u=>u.Bill_id==null && u.User_id==user_id, prop: "Product").ToList();
-            return new JsonResult(data);    
+            if(id==null)
+            {
+                string? user_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                List<BillhasProductClass> data = _db.Billhasproduct.getSpecifics(u => u.Bill_id == null && u.User_id == user_id, prop: "Product").ToList();
+                return new JsonResult(data);
+            }
+            else
+            {
+                List<BillhasProductClass> data = _db.Billhasproduct.getSpecifics(u => u.Bill_id == id, prop: "Product").ToList();
+                return Json(data);
+            }
         }
 
         public JsonResult stockid(int? id)
@@ -75,13 +90,20 @@ namespace Track.Controllers
                 try
                 {
                     _db.Billhasproduct.DeleteMost(two);
-                    _db.Save();
                     _db.Bill.Delete(one);
                     _db.Save();
                     return Json(new
                     {
                         success = true,
                         message = "Value Deleted Successfully"
+                    });
+                }
+                catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx && sqlEx.Number == 547)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Chalani Record is Still present"
                     });
                 }
                 catch (Exception ex)
@@ -198,34 +220,56 @@ namespace Track.Controllers
         public IActionResult Addbill(BillClass bill)
         {
             ViewBag.ActivePage = "Bill";
-            if (ModelState.IsValid)
+            try
             {
-                _db.Bill.Add(bill);
-                _db.Save();
-
-                List<BillhasProductClass> one = _db.Billhasproduct.getSpecifics(u => u.Bill_id == null, prop: null).ToList();
-                foreach (var data in one)
+                if (ModelState.IsValid)
                 {
-                    data.Bill_id = bill.Id;
-                    _db.Billhasproduct.Update(data);
-                    List<StockClass> To_update = _db.Stock.getSpecifics(u => u.billhasProduct_id == data.Id, null).ToList();
-                    foreach (var lita in To_update)
+                    BillClass billone = _db.Bill.GetOne(u => u.Id==bill.Id, null);
+                    List<BillhasProductClass> one;
+                    if (billone==null) 
                     {
-                        lita.Customer_id = bill.Customer_id;
-                        lita.InStock = "N";
-                        _db.Stock.Update(lita);
+                        _db.Bill.Add(bill);
+                         one= _db.Billhasproduct.getSpecifics(u => u.Bill_id == null, prop: null).ToList();
                     }
+                    else
+                    {
+                        _db.Bill.Update(bill);
+                        one=_db.Billhasproduct.getSpecifics(u=>u.Bill_id==bill.Id, prop: null).ToList();
+                    }
+                    _db.Save();
+
+                   
+                    foreach (var data in one)
+                    {
+                        data.Bill_id = bill.Id;
+                        _db.Billhasproduct.Update(data);
+                        List<StockClass> To_update = _db.Stock.getSpecifics(u => u.billhasProduct_id == data.Id, null).ToList();
+                        foreach (var lita in To_update)
+                        {
+                            lita.Customer_id = bill.Customer_id;
+                            lita.InStock = "N";
+                            _db.Stock.Update(lita);
+                        }
+                    }
+                    _db.Save();
+                    return View();
                 }
-                _db.Save();
-                return View();
+                else
+                {
+                    TempData["error"] = "The bill Description was not valid";
+                }
+            } catch(Exception ex)
+            {
+                TempData["error"] = ex.Message;
             }
-            TempData["error"] = "The bill Description was not valid";
             return RedirectToAction("CreateBill");
         }
 
         [HttpPost]
-        public IActionResult Paid(PaymentClass obj) 
+        public IActionResult Paid(PaymentClass obj, string hiDate) 
         {
+            obj.PDate = DateTime.Parse(hiDate);
+            ModelState.Remove("obj.PDate");
             if(ModelState.IsValid)
             {
                 bool Sucess;
@@ -418,6 +462,10 @@ namespace Track.Controllers
                         }
                         //List<StockClass> man = _db.Stock.getSpecifics(u => u.billhasProduct_id == null
                         //&& u.Product_id == obj.Class.product_id && u.InStock=="Y", null).Take(obj.Class.Quantity).ToList();
+                        if(obj.Class.Bill_id==0)
+                        {
+                            obj.Class.Bill_id = null;
+                        }
                         _db.Billhasproduct.Add(obj.Class);
                         _db.Save();
                         foreach (var item in obj.Serial_no)

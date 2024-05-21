@@ -290,6 +290,8 @@ namespace Track.Controllers
                         {
                             one.InStock = "Y";
                         }
+                        one.isDamaged = data.isDamaged;
+                        one.Damaged_why = data.Damaged_why;
                         _db.Stock.Update(one);
                         _db.Save();
 

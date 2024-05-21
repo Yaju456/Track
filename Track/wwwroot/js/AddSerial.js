@@ -3,7 +3,18 @@ var Serial_no = new Set();
 var product_name = new Set();
 var order_no = new Set();
 $(document).ready(function () {
-    reloadTable(0,'');
+    reloadTable(0, '');
+    $("input[type=checkbox]").click(function () {
+        if ($("#idDamaged").is(':checked')) {
+            people = prompt("How was it Damaged?");
+            if (people == null) {
+                $("#Dmessage").val(null);
+            }
+            else {
+                $("#Dmessage").val(people);
+            }
+        }
+    });
 });
 
 $("#Search").change(function () {
@@ -96,7 +107,9 @@ function reloadTable(wh, mval) {
                     else {
                         Obj += '<td>null</td>'
                     }
-                    Obj += '<td><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal" onclick="OneAdd(' + value.id + ', \'' + value.serial_number + '\')"><i class="bi bi-pencil-square"></i> Edit</button></td>';
+                    Obj += '<td><button type="button" class="btn btn-success" data-toggle="modal"\
+                               data-target="#exampleModal" onclick="OneAdd(' + value.id + ', \'' +
+                        value.serial_number + '\',\'' + value.isDamaged +'\')"><i class="bi bi-pencil-square"></i> Edit</button></td>';
                     Obj += '<td><a class="btn btn-danger" onclick=Delete("/Order/Deletestock?id=' + value.id + '")><i class="bi bi-trash"></i> Delete</a></td>';
 
                 }
@@ -135,10 +148,14 @@ function Delete(Url) {
     });
 }
 
-function OneAdd(id, serial_no)
+function OneAdd(id, serial_no, isDamaged)
 {
     $("#Stock_NO").val(id);
-    $("#serial_no").val(serial_no); 
+    $("#serial_no").val(serial_no);
+    console.log(isDamaged);
+    if (isDamaged != "null") {
+        $("#idDamaged").prop('checked', true);
+    }
 }
 
 $("#myForm").on("submit", function (e) {
@@ -146,10 +163,14 @@ $("#myForm").on("submit", function (e) {
     var Id = $("#Stock_NO").val(); 
     var Serial_no = $("#serial_no").val();
     var Customer_id = $("#Customer").val();
+    var IsDamaged = $("#idDamaged").is(':checked') ? 'F' : null;
+    var Damaged_why = $("#Dmessage").val();
     var obj = {
         id: Id,
         serial_no: Serial_no,
-        customer_id: Customer_id
+        customer_id: Customer_id,
+        isDamaged: IsDamaged,
+        damaged_why: Damaged_why
     };
 
     $.ajax({

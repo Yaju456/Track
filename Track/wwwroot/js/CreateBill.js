@@ -24,6 +24,7 @@ $("#AddProduct").on("submit", function (e) {
     var Rate = $("#Rate").val();
     var Quantity = $("#Quantity").val();
     var Serialn_no = [];
+    var Bill_id = $("#Bill_id").val();
     for (var i = 0; i < Quantity; i++) {
         var sid = "#S-" + i;
         var iid = "#I-" + i;
@@ -38,6 +39,7 @@ $("#AddProduct").on("submit", function (e) {
         product_id: productName,
         rate: Rate,
         quantity: Quantity,
+        bill_id: Bill_id
     };
     var DATA = {
         class: Class,
@@ -88,8 +90,16 @@ function fillCustomer() {
     });
 }
 function reloadTable() {
+    let bill_id = $("#Bill_id").val();
+    var URL;
+    if (bill_id != 0) {
+        URL = '/bill/getCom?id=' + bill_id;
+    }
+    else {
+        URL ='/bill/getCom'
+    }
     $.ajax({
-        url: '/bill/getCom',
+        url: URL,
         type: 'Get',
         data: 'json',
         contentType: 'application/ json; charset = utf - 8;',
@@ -98,14 +108,25 @@ function reloadTable() {
             var total = 0;
             $.each(result, function (index, value) {
                 Obj += '<tr>';
-                Obj += '<td>' + value.product.name + '</td>';
+                if (value.product=== null) {
+                    Obj += '<td>' + value.extra_items + '</td>';
+                }
+                else {
+                    Obj += '<td>' + value.product.name + '</td>';
+                }
                 Obj += '<td>' + value.rate + '</td>';
                 Obj += '<td>' + value.quantity + '</td >';
                 Obj += '<td>' + value.total + '</td>';
                 total += value.total;
                 Obj += '<td><a class="btn btn-danger" onclick=Delete("/bill/DeleteCom?id=' + value.id + '")><i class="bi bi-trash"></i> Delete</a></td>';
-                Obj += '<td><button class="btn btn-success" onclick=Edit(' + value.id +','+value.product_id + ',' + value.rate + ',' + value.quantity + ') data-toggle="modal" \
+                if (value.product == null) {
+                    Obj += '<td><button class="btn btn-success" onclick=EditService(' + value.id + ',\'' + value.extra_items + '\',' + value.rate + ',' + value.quantity + ') data-toggle="modal" \
+                    data-target="#ServiceModalLong">Edit</button></td>';
+                }
+                else {
+                    Obj += '<td><button class="btn btn-success" onclick=Edit(' + value.id + ',' + value.product_id + ',' + value.rate + ',' + value.quantity + ') data-toggle="modal" \
         data-target="#exampleModal">Edit</button></td>';
+                }
                 Obj += '</tr>';
             });
             Obj += '<tr>';
@@ -197,4 +218,47 @@ function Add() {
     $("#Rate").val(0);
     $("#Quantity").val(0);
     Getit();
+}
+
+function EditService(id, service, rate, quantity) {
+    $("#NService").val(service);
+    $("#rate").val(rate);
+    $("#quantity").val(quantity);
+    $("#billS_id").val(id)
+}
+
+function AddService() {
+    $("#NService").val(null);
+    $("#rate").val(0);
+    $("#quantity").val(0);
+    $("#billS_id").val(0)
+}
+function onClickme() {
+    let Id = $("#billS_id").val();
+    let Bill_id = $("#Bill_id").val();
+    let service_name = $("#NService").val();
+    let Rate = $("#rate").val();
+    let Quantity = $("#quantity").val();
+    let obj = {
+        id: Id,
+        bill_id: Bill_id,
+        rate: Rate,
+        quantity: Quantity,
+        extra_items: service_name
+    };
+    $.ajax({
+        type: 'POST',
+        url: '/ChalaniToBill/addService',
+        data: 'json',
+        data: obj,
+        success: function (result) {
+            if (result.success) {
+                toastr["success"](result.message, "Service added", { timeOut: 5000 });
+                reloadTable();
+            }
+            else {
+                toastr["error"](reuslt.message, "Something went Wrong", { timeOut: 5000 });
+            }
+        }
+    });
 }

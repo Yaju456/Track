@@ -48,7 +48,7 @@ function reloadTable() {
                 protot++;
                 Obj += '<tr>';
                 if (value.product == null) {
-                    Obj += '<td>' + value.extra_items + '<button class="btn btn-danger" onclick=Delete(' + value.id+')\
+                    Obj += '<td>' + value.extra_items + '  <button class="btn btn-danger" onclick=Delete(' + value.id+')\
                             ><i class="bi bi-trash"></i></button></td>';
                 }
                 else

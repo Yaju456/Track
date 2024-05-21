@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Web.Http;
 using Track.Data;
 using Track.Models;
 using Track.PreData;
@@ -90,22 +91,26 @@ namespace Track.Controllers
             ViewBag.CatagoryType = CatagoryType;
             return View();
         }
-        public JsonResult upStock(int? id, string? message)
+        public JsonResult upStock([FromUri] int[] ID, string? message)
         {
             try
             {
-                StockClass one = _db.Stock.GetOne(u => u.Id == id, null);
-                one.isDamaged = "N";
-                one.Damaged_why = message;
-                if(one.chalanihasProduct_id!=null)
+                foreach (var id in ID)
                 {
-                    int iId = Convert.ToInt32(one.chalanihasProduct_id);
-                    one.chalanihasProduct_id = null;
-                    StockClass two = _db.Stock.GetOne(u => u.InStock == "Y" && u.Product_id==one.Product_id && u.isDamaged==null && u.chalanihasProduct_id==null, null);
-                    two.chalanihasProduct_id=iId;
-                    _db.Stock.Update(two);
+                    StockClass one = _db.Stock.GetOne(u => u.Id == id, null);
+                    one.isDamaged = "N";
+                    one.Damaged_why = message;
+                    if (one.chalanihasProduct_id != null)
+                    {
+                        int iId = Convert.ToInt32(one.chalanihasProduct_id);
+                        one.chalanihasProduct_id = null;
+                        StockClass two = _db.Stock.GetOne(u => u.InStock == "Y" && u.Product_id == one.Product_id && u.isDamaged == null && u.chalanihasProduct_id == null, null);
+                        two.chalanihasProduct_id = iId;
+                        two.InStock= "N";
+                        _db.Stock.Update(two);
+                    }
+                    _db.Stock.Update(one);
                 }
-                _db.Stock.Update(one);
                 _db.Save();
                 return Json(new
                 {
@@ -121,7 +126,7 @@ namespace Track.Controllers
             }
             
         }
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpPost]
         public IActionResult Index(ProductClass obj, IFormFile? file)
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;//for www root folder path

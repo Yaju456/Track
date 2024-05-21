@@ -26,5 +26,7 @@ namespace Track.Models
         public double? payment { get; set; }
 
         public string? Remark { get; set; }
+
+        public string? hasChalani { get; set; }
     }
 }

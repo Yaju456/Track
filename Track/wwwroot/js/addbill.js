@@ -96,7 +96,12 @@ function LoadTable(mval) {
                     }
                     Obj += '<td> <a href="/bill/check?id=' + value.id + '" class="btn btn-success">View</a>';
                     Obj += '<td> <button class="btn btn-danger" onclick=Delete(' + value.id + ')>Delete</button><td>';
-                    Obj += '<td> <a class="btn btn-success" href="/ChalaniToBill/Index/' + value.id + '">Edit</a></button><td>';
+                    if (value.hasChalani == null) {
+                        Obj += '<td> <a class="btn btn-success" href="/bill/CreateBill?id=' + value.id + '">Edit</a></button><td>';
+                    }
+                    else {
+                        Obj += '<td> <a class="btn btn-success" href="/ChalaniToBill/Index/' + value.id + '">Edit</a></button><td>';
+                    }
 
                     Obj += '</tr>';
                 }
@@ -119,8 +124,13 @@ function Delete(id)
                     url: Url,
                     type: 'delete',
                     success: function (data) {
-                        toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
-                        LoadTable("");
+                        if (data.success) {
+                            toastr["success"](data.message, "Value Deleted", { timeOut: 5000 });
+                            LoadTable("");
+                        }
+                        else {
+                            toastr["error"](data.message, "Error!!!!", { timeOut: 5000 });
+                        }
                     },
 
                 })

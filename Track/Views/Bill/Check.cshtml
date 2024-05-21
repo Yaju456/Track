@@ -4,7 +4,6 @@
 @{
 }
 @model BillClass
-
 <div class="modal fade" id="PaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -28,7 +27,7 @@
                     </div>
                     <div class="form-group">
                         <label for="PDate">Date</label>
-                        <input id="PDate" type="date" class="form-control"/>
+                        <input id="PDate" type="date" class="form-control" placeholder="yyyy-mm-dd"/>
                     </div>
                     <div class="from-group">
                         <label for="PAmount">Amount</label>
@@ -73,7 +72,7 @@
                                 Serial No
                             </th>
                             <th>
-                                Order no
+                                Index no
                             </th>
                         </tr>
                     </thead>
@@ -181,30 +180,32 @@
         <input asp-for="@Model.total" hidden id="sub-total" />
     </div>
 </form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Product Name
-            </th>
-            <th>
-                Rate
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th>
-                Total
-            </th>
-            <th>
-                View
-            </th>
-        </tr>
-    </thead>
-    <tbody id="t-body">
-    </tbody>
-</table>
+<div id="billPrint">
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width:20%">
+                    Product Name
+                </th>
+                <th style="width:20%">
+                    Rate
+                </th>
+                <th style="width:20%">
+                    Quantity
+                </th>
+                <th style="width:20%">
+                    Total
+                </th>
+                <th class="no-print" style="width:20%">
+                    View
+                </th>
+            </tr>
+        </thead>
+        <tbody id="t-body">
+        </tbody>
+    </table>
+</div>
+<button class="btn btn-primary" onclick="printBill()">Print Bill</button>
 @section Scripts
 {
     <script src="~/js/printThis.js"></script>

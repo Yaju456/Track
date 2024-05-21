@@ -46,6 +46,8 @@ function reloadTable(mval) {
                         mySet.add(String(value.district.name).toUpperCase());
                         Obj += '<td>' + value.localBody.name + '</td>';
                         mySet.add(String(value.localBody.name).toUpperCase());
+                        Obj += '<td>' + value.address + '</td>';
+                        mySet.add(String(value.address).toUpperCase());
 
                     }
                     Obj += '<td><button type="button" class="btn  btn-success" data-toggle="modal" data-target="#exampleModal" \

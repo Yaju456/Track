@@ -1,11 +1,34 @@
 ﻿var nameSet = new Set();
-$(document).ready(function () {
-    $("#ClientName").change(function () {
-        var selectedOption = $(this).val();
-        $("#ClientNumber").val(selectedOption);
+var Customer_name = new Set();
+
+function Cus_change() {
+    var input = $("#Customer_search").val();
+    console.log(input);
+    var optionToSelect = $('#ClientName option').filter(function () {
+        return $(this).text() === input;
     });
+    console.log(optionToSelect);
+    if (optionToSelect.length > 0) {
+        $('#ClientName').val(optionToSelect.val());
+        $("#ClientNumber").val(optionToSelect.val());
+    }
+    else {
+        $('#ClientName').val(0);
+        $("#ClientNumber").val(0);
+        toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+    }
+}
+$(document).ready(function () {
+    let lili = new Date();
+    let day = ("0" + lili.getDate()).slice(-2);
+    let month = ("0" + (lili.getMonth() + 1)).slice(-2);
+
+    $("#BDate").val(lili.getFullYear() + "-" + month + "-" + day);
+    $("#Customer_search").on('change', function () {
+        Cus_change();
+    });
+    
     fillCustomer();
-    fillOptions();
     reloadTable();
     $("#Quantity").change(function () {
         Getit();
@@ -84,8 +107,11 @@ function fillCustomer() {
                 nameSet.add(String(value.name).toUpperCase());
                 $('#ClientName').append('<option value="' + value.id + '">' + value.name + '</option>');
                 $('#ClientNumber').append('<option value="' + value.id + '">' + value.phoneNumber + '</option>');
-
+                Customer_name.add(value.name);
             });
+            Cus_change();
+            let man = Array.from(Customer_name);
+            autocomplete(document.getElementById("Customer_search"), man);
         }
     });
 }
@@ -215,8 +241,8 @@ function Edit(i, product, rate, quantity) {
 function Add() {
     $("#ID").val(0);
     $("#ProductName").val(0);
-    $("#Rate").val(0);
-    $("#Quantity").val(0);
+    $("#Rate").val(1);
+    $("#Quantity").val(1);
     Getit();
 }
 
@@ -229,8 +255,8 @@ function EditService(id, service, rate, quantity) {
 
 function AddService() {
     $("#NService").val(null);
-    $("#rate").val(0);
-    $("#quantity").val(0);
+    $("#rate").val(1);
+    $("#quantity").val(1);
     $("#billS_id").val(0)
 }
 function onClickme() {

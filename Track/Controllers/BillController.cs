@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,11 @@ namespace Track.Controllers
             BillClass myBill = _db.Bill.GetOne(u => u.Id == id, null);
             if(myBill==null)
             {
-                return View(new BillClass());
+                BillClass man = new BillClass();
+                man.Customer = new CustomerClass();
+                man.Customer.Name = "";
+                man.Billno = "T-" + (_db.Bill.getAll(null).OrderByDescending(u => u.Id).FirstOrDefault().Id + 1);
+                return View(man);
             }
             return View(myBill);
         }
@@ -237,7 +242,8 @@ namespace Track.Controllers
                         one=_db.Billhasproduct.getSpecifics(u=>u.Bill_id==bill.Id, prop: null).ToList();
                     }
                     _db.Save();
-
+                    bill.Billno = "T-" + bill.Billno;
+                    _db.Bill.Update(bill);
                    
                     foreach (var data in one)
                     {

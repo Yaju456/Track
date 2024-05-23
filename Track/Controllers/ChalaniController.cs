@@ -169,6 +169,8 @@ namespace Track.Controllers
             {
                 ChalaniClass lili = new ChalaniClass();
                 lili.Id = 0;
+                lili.Customer = new CustomerClass();
+                lili.Customer.Name = "";
                 return View(lili);
             }
             //else if(value.BillCreated=="Y")

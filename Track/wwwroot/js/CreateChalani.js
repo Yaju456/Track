@@ -1,12 +1,33 @@
 ﻿var nameSet = new Set();
+var Customer_name = new Set();
+function Cus_change() {
+    var input = $("#Customer_search").val();
+    console.log(input);
+    var optionToSelect = $('#ClientName option').filter(function () {
+        return $(this).text() === input;
+    });
+    console.log(optionToSelect);
+    if (optionToSelect.length > 0) {
+        $('#ClientName').val(optionToSelect.val());
+        $("#ClientNumber").val(optionToSelect.val());
+        $("#Address").val(optionToSelect.val());
+    }
+    else {
+        $('#ClientName').val(0);
+        $("#ClientNumber").val(0);
+        toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+    }
+}
 $(document).ready(function () {
     $("#ClientName").change(function () {
         var selectedOption = $(this).val();
         $("#ClientNumber").val(selectedOption);
         $("#Address").val(selectedOption);
     });
+    $("#Customer_search").on('change', function () {
+        Cus_change();
+    });
     fillCustomer();
-    fillOptions();
     reloadTable();
     $("#Quantity").change(function () {
         Getit();
@@ -95,14 +116,11 @@ function fillCustomer() {
                 $('#ClientName').append('<option value="' + value.id + '">' + value.name + '</option>');
                 $('#ClientNumber').append('<option value="' + value.id + '">' + value.phoneNumber + '</option>');
                 $('#Address').append('<option value="' + value.id + '">' + value.address+ '</option>');
-
-
+                Customer_name.add(value.name);
             });
-            if ($("#cusSelected").val()) {
-                $("#ClientName").val($("#cusSelected").val());
-                $("#ClientNumber").val($("#cusSelected").val());
-                $("#Address").val($("#cusSelected").val());
-            }
+            Cus_change();
+            let man = Array.from(Customer_name);
+            autocomplete(document.getElementById("Customer_search"), man);
         }
     });
 }
@@ -242,7 +260,7 @@ function Edit(i, product, quantity) {
 function Add() {
     $("#ID").val(0);
     $("#ProductName").val(0);
-    $("#Quantity").val(0);
+    $("#Quantity").val(1);
     $("#ProductName").prop("disabled", false);
     Getit();
 }

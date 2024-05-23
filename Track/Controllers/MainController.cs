@@ -85,6 +85,41 @@ namespace Track.Controllers
             }
         }
 
+        public JsonResult AllLocal()
+        {
+            List<LocalBodyClass> list = _context.LocalBody.ToList();
+            return Json(list);
+        }
+
+        public JsonResult getAddress(string? man)
+        {
+            try
+            {
+                LocalBodyClass body = _context.LocalBody.FirstOrDefault(u => u.Name == man);
+                DistrictClass bDist = _context.District.FirstOrDefault(u => u.Id == body.DistrictId);
+                ProvinceClass Proin = _context.Province.FirstOrDefault(u => u.Id == bDist.ProvinceId);
+                return Json(new
+                {
+                    success=true,
+                    pro = Proin.Name,
+                    pro_id=Proin.Id,
+                    dist = bDist.Name,
+                    dist_id=bDist.Id,
+                    local = body.Name,
+                    local_id=body.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message="Given Name not present in local body"
+                });
+            }
+            
+        } 
+
         public JsonResult getProvince()
         {
             List<ProvinceClass> data= _context.Province.ToList();

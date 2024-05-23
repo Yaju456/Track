@@ -4,7 +4,7 @@
 @{
 }
 @model ChalaniClass
-
+<link rel="stylesheet" href="~/css/AutoComplete.css" />
 
 <div class="modal fade" id="CustomerexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -17,11 +17,14 @@
             </div>
             <div class="modal-body">
 
-                <form id="CustomerForm">
+                <form id="CustomerForm" autocomplete="off">
                     <input id="ID1" value="0" hidden type="number" />
                     <div class="form-group">
                         <label>Name</label>
-                        <input id="Name1" type="text" class="form-control" placeholder="Name">
+                        <br />
+                        <div class="autocomplete" style="width:100%;">
+                            <input id="Name1" type="text" class="form-control" placeholder="Name">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -31,17 +34,20 @@
 
                     <div class="form-group">
                         <label>Province</label>
+                        @* <select  id="Province_me" class="form-select"></select> *@
                         <select id="ProvinceOption" class="form-select">
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>District</label>
+                        @* <select id="District_me" class="form-select"></select> *@
                         <select id="DistrictOption" class="form-select"></select>
                     </div>
 
                     <div class="form-group">
                         <label>Local Body</label>
+                        @* <select id="Local_me" class="form-select"></select> *@
                         <select id="LocalBodyOption" class="form-select"></select>
                     </div>
                     <div class="form-group">
@@ -114,7 +120,8 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label for="ClientName">Customer Name</label>
-            <select asp-for="@Model.Customer_id" id="ClientName" class="form-select">
+            <input type="text" id="Customer_search" class="form-control" placeholder="Name" value="@Model.Customer.Name"/>
+            <select hidden asp-for="@Model.Customer_id" id="ClientName" class="form-select">
             </select>
         </div>
         <div class="form-group col-md-4">
@@ -178,6 +185,7 @@
 </table>
 @section Scripts
 {
+    <script src="~/js/Autocomplete.js"></script>
     <script src="~/js/Customerform.js"></script>
     <script src="~/js/CreateChalani.js"></script>
 }

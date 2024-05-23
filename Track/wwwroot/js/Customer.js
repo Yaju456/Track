@@ -1,7 +1,7 @@
 ﻿var mySet = new Set();
 $(document).ready(function () {
     reloadTable("");
-    fillOptions();
+    //fillOptions();
 });
 function fillCustomer()
 {
@@ -50,7 +50,7 @@ function reloadTable(mval) {
                         mySet.add(String(value.address).toUpperCase());
 
                     }
-                    Obj += '<td><button type="button" class="btn  btn-success" data-toggle="modal" data-target="#exampleModal" \
+                    Obj += '<td><button type="button" class="btn  btn-success" data-toggle="modal" data-target="#CustomerexampleModal" \
                 onclick=OneAdd(' + value.id + ',\'' + encodeURIComponent(value.name) + '\',' + value.phoneNumber + ',' + value.provinceId + ',' + value.districtId + ',' + value.localBodyId + ')><i class="bi bi-pencil-square"></i> Edit</button></td>';
                     Obj += '<td><a class="btn btn-danger" onclick=Delete("/Main/Delete?id=' + value.id + '")><i class="bi bi-trash"></i> Delete</a></td>';
                     Obj += '</tr>'

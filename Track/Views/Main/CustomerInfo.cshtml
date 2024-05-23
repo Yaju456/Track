@@ -18,11 +18,14 @@
             </div>
             <div class="modal-body">
 
-                <form id="CustomerForm">
+                <form id="CustomerForm" autocomplete="off">
                     <input id="ID1" value="0" hidden type="number"/>
                    <div class="form-group">
                         <label>Name</label>
-                        <input id="Name1" type="text" class="form-control autocomplete" placeholder="Name">
+                        <br />
+                        <div class="autocomplete" style="width:100%;">
+                            <input id="Name1" type="text" class="form-control" placeholder="Name">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -32,17 +35,20 @@
 
                     <div class="form-group">
                         <label>Province</label>
+                        @* <select  id="Province_me" class="form-select"></select> *@
                         <select id="ProvinceOption" class="form-select">
                         </select>
                     </div>
     
                     <div class="form-group">
                         <label>District</label>
+                        @* <select id="District_me" class="form-select"></select> *@
                         <select id="DistrictOption" class="form-select"></select>
                     </div>
 
                     <div class="form-group">
                         <label>Local Body</label>
+                        @* <select id="Local_me" class="form-select"></select> *@
                         <select id="LocalBodyOption" class="form-select"></select>
                     </div>
                     <div class="form-group">

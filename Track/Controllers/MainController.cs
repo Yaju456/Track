@@ -13,7 +13,7 @@ using Track.ViewModel;
 
 namespace Track.Controllers
 {
-    //[Authorize(Roles = Roll.Admin)]
+    [Authorize(Roles = Roll.Admin)]
 
 
     public class MainController : Controller

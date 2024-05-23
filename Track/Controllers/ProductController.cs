@@ -16,7 +16,7 @@ using Track.Repository.Irepository;
 
 namespace Track.Controllers
 {
-   // [Authorize(Roles = Roll.Admin)]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = Roll.Admin)]
 
     public class ProductController : Controller
     {

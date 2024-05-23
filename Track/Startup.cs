@@ -80,7 +80,7 @@ namespace Track
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Main}/{action=AddVendor}/{id?}");
             });
         }
     }

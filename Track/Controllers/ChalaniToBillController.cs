@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,11 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Track.Models;
+using Track.PreData;
 using Track.Repository.Irepository;
 using Track.ViewModel;
 
 namespace Track.Controllers
 {
+    [Authorize(Roles = Roll.Admin)]
+
     public class ChalaniToBillController : Controller
     {
         private readonly IunitOfwork _db;

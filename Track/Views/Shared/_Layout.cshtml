@@ -29,39 +29,40 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Vendor" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="AddVendor">Vendor</a>
+                        @if (User.IsInRole(Roll.Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Vendor" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="AddVendor">Vendor</a>
                             </li>
 
                             <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Order" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="Index">Inventory</a>
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Order" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="Index">Inventory</a>
                             </li>
 
                             <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Product" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Product" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
                             </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Stock" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="addSerial">Stock</a>
-                        </li>
 
                             <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Customer" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="CustomerInfo">Customer</a>
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Stock" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="addSerial">Stock</a>
                             </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Bill" ? "active" : "")" asp-area="" asp-controller="bill" asp-action="Addbill">Bill</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Chalani" ? "active" : "")" asp-area="" asp-controller="Chalani" asp-action="index">Chalani</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark @(ViewBag.ActivePage == "Onrepair" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="OnRepair">On Repair</a>
-                        </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Customer" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="CustomerInfo">Customer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Bill" ? "active" : "")" asp-area="" asp-controller="bill" asp-action="Addbill">Bill</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Chalani" ? "active" : "")" asp-area="" asp-controller="Chalani" asp-action="index">Chalani</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Onrepair" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="OnRepair">On Repair</a>
+                            </li>
+                        }
                         </ul>
-                    <partial name="_loginPartial" />
+                        
+                        <partial name="_loginPartial" />
                 </div>
             </div>
         </nav>

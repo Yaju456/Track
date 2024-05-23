@@ -1,4 +1,45 @@
 ﻿var nameSet = new Set();
+$(document).ready(function () {
+    $("#CustomerForm").on("submit", function (e) {
+        e.preventDefault();
+        var Id = $("#ID1").val();
+        var Name = $("#Name1").val();
+        var PhoneNumber = $("#phoneNumber").val();
+        var Province = $("#ProvinceOption").val();
+        var District = $("#DistrictOption").val();
+        var LocalBody = $("#LocalBodyOption").val();
+        var Address = $("#IAddress").val();
+        var obj = {
+            id: Id,
+            name: Name,
+            phoneNumber: PhoneNumber,
+            provinceId: Province,
+            districtId: District,
+            localBodyId: LocalBody,
+            address: Address
+        };
+
+        if (nameSet.has(Name.toUpperCase()) && Id == 0) {
+            $.confirm({
+                title: 'Name Alread Exists!',
+                content: 'Given Customer Name Already Exists are you sure this is new Customer?',
+                buttons: {
+                    confirm: function () {
+                        f_submit(obj);
+
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+        else {
+            f_submit(obj);
+        }
+    });
+
+});
 function fillOptions() {
     $.ajax({
         url: '/Main/getProvince',
@@ -136,46 +177,6 @@ function Delete(Url) {
 }
 /////////////////////////////////////////////////////////
 
-$("#CustomerForm").on("submit", function (e) {
-    e.preventDefault();
-    var Id = $("#ID1").val();
-    var Name = $("#Name1").val();
-    var PhoneNumber = $("#phoneNumber").val();
-    var Province = $("#ProvinceOption").val();
-    var District = $("#DistrictOption").val();
-    var LocalBody = $("#LocalBodyOption").val();
-    var Address = $("#IAddress").val();
-    var obj = {
-        id: Id,
-        name: Name,
-        phoneNumber: PhoneNumber,
-        provinceId: Province,
-        districtId: District,
-        localBodyId: LocalBody,
-        address: Address
-    };
-
-    if (nameSet.has(Name.toUpperCase()) && Id == 0) {
-        $.confirm({
-            title: 'Name Alread Exists!',
-            content: 'Given Customer Name Already Exists are you sure this is new Customer?',
-            buttons: {
-                confirm: function () {
-                    f_submit(obj);
-                },
-                cancel: function () {
-                    $.alert('Canceled!');
-                }
-            }
-        });
-    }
-    else {
-        f_submit(obj);
-    }
-
-});
-
-
 function f_submit(obj) {
     $.ajax({
         url: '/Main/CustomerInfo',
@@ -188,6 +189,8 @@ function f_submit(obj) {
                 document.getElementById("CustomerForm").reset();
                 reloadTable("");
                 fillCustomer();
+              
+                $('#CustomerexampleModal').find('[data-dismiss="modal"]').trigger('click');
             }
             else {
                 toastr["error"](response.message, "Not entered", { timeOut: 5000 });

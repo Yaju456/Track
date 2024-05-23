@@ -176,6 +176,10 @@ namespace Track.Controllers
                     string Mesage;
                     obj.total = obj.Quantity * obj.Rate;
                     obj.User_id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if(obj.Bill_id==0)
+                    {
+                        obj.Bill_id = null;
+                    }
                     BillhasProductClass man = _db.Billhasproduct.GetOne(u => u.Id == obj.Id, null);
                     if(man==null)
                     {

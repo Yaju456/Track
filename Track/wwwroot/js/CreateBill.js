@@ -257,7 +257,7 @@ function onClickme() {
                 reloadTable();
             }
             else {
-                toastr["error"](reuslt.message, "Something went Wrong", { timeOut: 5000 });
+                toastr["error"](result.message, "Something went Wrong", { timeOut: 5000 });
             }
         }
     });

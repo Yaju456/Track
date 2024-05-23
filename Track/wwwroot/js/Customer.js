@@ -5,7 +5,7 @@ $(document).ready(function () {
 });
 function fillCustomer()
 {
-    console.log("hi");
+
 }
 $("#form-search").on("submit", function (e) {
     e.preventDefault();

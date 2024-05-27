@@ -1,4 +1,7 @@
-﻿$(document).ready(function(){
+﻿$(document).ready(function () {
+    $("#Payment").on('change', function () {
+        $("#PAmount").val($("#Payment").val());
+    })
     reloadTable();
 });
 
@@ -233,6 +236,8 @@ $("#PaymentForm").on("submit", function (e) {
                 toastr["success"](response.message, "Payment Added", { timeOut: 5000 });
                 $("#Payment").val(response.pay);
                 document.getElementById("PaymentForm").reset();
+                $('#PaymentModal').find('[data-dismiss="modal"]').trigger('click');
+
                 reloadTable();
             }
             else {

@@ -1,5 +1,8 @@
 ﻿var nameSet = new Set();
 var LocalbodySet = new Set();
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
 $(document).ready(function () {
     $.ajax({
         type: 'GET',
@@ -60,7 +63,8 @@ $(document).ready(function () {
 
 });
 
-function hehe() {
+async function hehe() {
+    await sleep(100);
     var currentValue = encodeURIComponent($('#Name1').val());
     $.ajax({
         type: 'GET',
@@ -79,6 +83,8 @@ function hehe() {
                 $('#DistrictOption').append('<option selected value="' + result.dist_id + '">' + result.dist + '</option>');
                 $('#LocalBodyOption').append('<option selected value="' + result.local_id + '">' + result.local + '</option>');
 
+                $('#IAddress').empty();
+                $('#IAddress').val(decodeURIComponent(currentValue).split(" ")[0]);
 
                 //$("#Province_me").val();
                 //$("#District_me").val(result.dist);
@@ -196,6 +202,8 @@ function OneAdd(id, name, phoneNumber, proId, disId, locid) {
 
 function clearIt() {
     document.getElementById("CustomerForm").reset();
+    $("#phoneNumber").val(9800000000);
+
 }
 function Delete(Url) {
     $.confirm({

@@ -99,6 +99,7 @@ namespace Track.Controllers
                 {
                     StockClass one = _db.Stock.GetOne(u => u.Id == id, null);
                     one.isDamaged = "N";
+                    one.InStock = "Y";
                     one.Damaged_why = message;
                     if (one.chalanihasProduct_id != null)
                     {

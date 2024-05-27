@@ -24,8 +24,7 @@ namespace Track.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.ActivePage = "Home";
-            return View();
+            return RedirectToAction("CustomerInfo", "Main");
         }
 
         public IActionResult Privacy()

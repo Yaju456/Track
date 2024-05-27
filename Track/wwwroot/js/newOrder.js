@@ -155,6 +155,8 @@ $("#AddProduct").on("submit", function (e) {
                 toastr["success"](response.message, "Value Added", { timeOut: 5000 });
                 document.getElementById("AddProduct").reset();
                 $("#ID").val(0);
+                $("#tada").empty();
+                $('#exampleModal').find('[data-dismiss="modal"]').trigger('click');
                 reloadTable();
             }
             else {
@@ -192,6 +194,8 @@ function AddOrder() {
                 toastr["success"](response.message, "Order Added", { timeOut: 5000 });
                 document.getElementById("AddProduct").reset();
                 document.getElementById("s-form").reset();
+                $("tada").empty();
+                $('#exampleModal').find('[data-dismiss="modal"]').trigger('click');
                 reloadTable();
             }
             else {

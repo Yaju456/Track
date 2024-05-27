@@ -120,7 +120,7 @@
     <div class="form-row">
         <div class="form-group col-md-4">
             <label for="ClientName">Customer Name</label>
-            <input type="text" id="Customer_search" class="form-control" placeholder="Name" value="@Model.Customer.Name"/>
+            <input type="text" id="Customer_search" class="form-control" placeholder="Name" autocomplete="off" value="@Model.Customer.Name"/>
             <select hidden asp-for="@Model.Customer_id" id="ClientName" class="form-select">
             </select>
         </div>
@@ -151,10 +151,9 @@
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-4 d-flex justify-content-left align-items-end">
+        
 
-            <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i> Generate Report</button>
-        </div>
+                    
         <div class="form-group col-md-4 d-flex justify-content-left align-items-end">
             <a class="btn btn-info" data-toggle="modal" data-target="#CustomerexampleModal">
                 <i class="bi bi-person-add"></i> Add Customer
@@ -183,6 +182,18 @@
     <tbody id="t-body">
     </tbody>
 </table>
+<button class="btn btn-primary" disabled form="Client" type="submit">
+    <i class="bi bi-file-bar-graph-fill"></i>
+    @if (Model.Id == 0)
+    {
+        <text>Generate Report</text>
+    }
+    else
+    {
+        <text>Update</text>
+    }
+</button>
+
 @section Scripts
 {
     <script src="~/js/Autocomplete.js"></script>

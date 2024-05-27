@@ -1,7 +1,12 @@
 ﻿var nameSet = new Set();
 var Customer_name = new Set();
+var countIt = 0;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
 
-function Cus_change() {
+async function Cus_change() {
+    await sleep(500);
     var input = $("#Customer_search").val();
     console.log(input);
     var optionToSelect = $('#ClientName option').filter(function () {
@@ -15,16 +20,25 @@ function Cus_change() {
     else {
         $('#ClientName').val(0);
         $("#ClientNumber").val(0);
-        toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+        console.log(input);
+        if (input != "") {
+            toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+        }
     }
 }
 $(document).ready(function () {
+    $("#phoneNumber").val(9800000000);
+
     let lili = new Date();
     let day = ("0" + lili.getDate()).slice(-2);
     let month = ("0" + (lili.getMonth() + 1)).slice(-2);
 
     $("#BDate").val(lili.getFullYear() + "-" + month + "-" + day);
+    $("#BDate").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
+    });
     $("#Customer_search").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
         Cus_change();
     });
     
@@ -77,16 +91,19 @@ $("#AddProduct").on("submit", function (e) {
             if (response.success) {
                 toastr["success"](response.message, "Value Added", { timeOut: 5000 });
                 document.getElementById("AddProduct").reset();
+                $("#tada").empty();
+                $('#exampleModal').find('[data-dismiss="modal"]').trigger('click');
                 reloadTable();
             }
             else {
+
                 toastr["error"](response.message, "Not entered", { timeOut: 5000 });
             }
         },
         error: function (xhr, textStatus, error) {
             console.log("error");
             alert(xhr.statusText);
-            console.log(textStatus);
+            console.log(textStatus);x
             console.log(error);
         }
     });
@@ -190,22 +207,68 @@ function Getit() {
             if (result.success) {
                 var Obj = "";
                 result.value.forEach(function (item, index) {
-                    Obj += ' <div class="form-group">\
-            <label>Serial no of Product ' + item.id + '</label>\
-                <input type="number" hidden id="I-'+index+'" value="'+ item.id+'">\
-                <input type="text" class="form-control" id="S-'+ index + '" value="' + item.value + '" placeholder="Serial no">\
-                </div>';
+                    Obj += '<div class="form-row align-items-center">\
+    		<div class="col-auto">\
+       			 <label>Serial no of Product ' + item.id + '</label>\
+        		<input type="number" hidden id="I-' + index + '" value="' + item.id + '">\
+                        <input type = "text" class="form-control" id = "S-' + index + '" value = "' + item.value + '" placeholder = "Serial no" >\
+            </div>\
+    		<div class="col-auto">\
+                        <label for="inlineRadio1">Is Damaged</label>\
+                        <input class="form-check-input ml-3" type="checkbox" name="options" id="inlineRadio1-' + index + '" value="' + item.id + '">\
+            </div>\
+        		</div >\
+	</div > ';
+
                 });
                 $("#tada").html(Obj);
+                AddPrompt();
             }
             else {
                 $("#tada").empty();
+                if ($("#ProductName").val() != null) {
+                    toastr["error"](result.message, "Something went wrong", { timeOut: 5000 });
+                }
+            }
+        }
+    });
+}
+function AddPrompt() {
+    $('input[name="options"]').on('change', function () {
+        var person;
+        if ($(this).is(':checked')) {
+            person = prompt("Please enter Damaged Reason");
+        }
+        if (person != null) {
+            let damaged = [];
+
+            $('input[name="options"]:checked').each(function () {
+                damaged.push($(this).val());
+            });
+            UpdateDamaged(damaged, person);
+        }
+    });
+}
+function UpdateDamaged(lili, message) {
+    var URL = '/product/upStock?';
+    lili.forEach((data) =>
+        URL += 'id=' + data + '&');
+    URL += '&message=' + encodeURIComponent(message);
+    $.ajax({
+        url: URL,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/ json; charset = utf - 8;',
+        success: function (result) {
+            if (result.success) {
+                Getit();
+            }
+            else {
                 toastr["error"](result.message, "Something went wrong", { timeOut: 5000 });
             }
         }
     });
 }
-
 function Delete(Url) {
 
     $.confirm({
@@ -280,6 +343,8 @@ function onClickme() {
         success: function (result) {
             if (result.success) {
                 toastr["success"](result.message, "Service added", { timeOut: 5000 });
+                $('#ServiceModalLong').find('[data-dismiss="modal"]').trigger('click');
+
                 reloadTable();
             }
             else {

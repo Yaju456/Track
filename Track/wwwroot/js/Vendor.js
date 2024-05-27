@@ -99,6 +99,8 @@ $("#myForm").on("submit", function (e) {
             if (response.success) {
                 toastr["success"](response.message, response.type, { timeOut: 5000 });
                 document.getElementById("myForm").reset();
+                $('#exampleModal').find('[data-dismiss="modal"]').trigger('click');
+
                 reloadTable("");
 
             }

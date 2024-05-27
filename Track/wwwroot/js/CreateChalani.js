@@ -1,6 +1,11 @@
 ﻿var nameSet = new Set();
 var Customer_name = new Set();
-function Cus_change() {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function Cus_change() {
+    await sleep(500);
     var input = $("#Customer_search").val();
     console.log(input);
     var optionToSelect = $('#ClientName option').filter(function () {
@@ -15,18 +20,34 @@ function Cus_change() {
     else {
         $('#ClientName').val(0);
         $("#ClientNumber").val(0);
-        toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+        if (input != "") {
+            toastr["error"]("Customer not Present", "Please Add the Given Customer", { timeOut: 5000 });
+        }
     }
 }
 $(document).ready(function () {
+    $("#phoneNumber").val(9800000000);
+
     $("#ClientName").change(function () {
         var selectedOption = $(this).val();
         $("#ClientNumber").val(selectedOption);
         $("#Address").val(selectedOption);
     });
+    $("#SDate").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
+    });
     $("#Customer_search").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
         Cus_change();
     });
+    $("#PhoneNumber").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
+    });
+
+    $("#Remarks").on('change', function () {
+        $(':input[type="submit"]').prop('disabled', false);
+    });
+
     fillCustomer();
     reloadTable();
     $("#Quantity").change(function () {
@@ -83,6 +104,8 @@ $("#AddProduct").on("submit", function (e) {
                 toastr["success"](response.message, "Value Added", { timeOut: 5000 });
                 document.getElementById("AddProduct").reset();
                 $("#tada").empty();
+                $('#exampleModal').find('[data-dismiss="modal"]').trigger('click');
+
                 reloadTable();
             }
             else {
@@ -182,7 +205,9 @@ function Getit() {
             }
             else {
                 $("#tada").empty();
-                toastr["error"](result.message, "Something went wrong", { timeOut: 5000 });
+                if ($("#ProductName").val() != null) {
+                    toastr["error"](result.message, "Something went wrong", { timeOut: 5000 });
+                }
             }
         }
     });

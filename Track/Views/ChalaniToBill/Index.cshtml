@@ -55,7 +55,7 @@
 
         <div class="form-group col-md-4">
             <label for="Bill_no">Bill No</label>
-            <input type="text" class="form-control"  id="Bill_no" asp-for="@Model.Billno" placeholder="Bill No" />
+            <input disabled type="text" class="form-control"  id="Bill_no" asp-for="@Model.Billno" placeholder="Bill No" />
         </div>
     </div>
     <div class="form-row">
@@ -67,7 +67,16 @@
         <input asp-for="@Model.total" hidden id="sub-total" />
         <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
 
-            <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i> Generate Report</button>
+            <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i>
+                @if (Model.Id == 0)
+                {
+                    <text>Generate Report</text>
+                }
+                else
+                {
+                    <text>Update</text>
+                }
+            </button>
         </div>
         <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
 

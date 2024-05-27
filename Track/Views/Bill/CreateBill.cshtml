@@ -143,13 +143,13 @@
 </div>
 
 
-<form id="Client" method="post" asp-controller="bill" asp-action="Addbill">
+<form id="Client" method="post" asp-controller="bill" asp-action="CreateBill">
 
     <div class="form-row">
         <input hidden asp-for="@Model.Id" id="Bill_id"/>
         <div class="form-group col-md-4">
             <label for="ClientName">Customer Name</label>
-            <input type="text" id="Customer_search" class="form-control" placeholder="Name" value="@Model.Customer.Name" />
+            <input type="text" id="Customer_search" autocomplete="off" class="form-control" placeholder="Name" value="@Model.Customer.Name" />
             <select hidden asp-for="@Model.Customer_id" id="ClientName" class="form-select">
 
             </select>
@@ -172,10 +172,7 @@
         </div>
 
         <input asp-for="@Model.total" hidden id="sub-total" />
-        <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
-            
-            <button class="btn btn-primary" type="submit"><i class="bi bi-file-bar-graph-fill"></i> Generate Report</button>
-        </div>
+       
         <div class="form-group col-md-4 d-flex justify-content-center align-items-end">
             <a class="btn btn-info" data-toggle="modal" data-target="#CustomerexampleModal">
                 <i class="bi bi-person-add"></i> Add Customer
@@ -214,6 +211,20 @@
 
     </tbody>
 </table>
+<div class="form-group col-md-4 d-flex justify-content-center align-items-end">
+
+    <button class="btn btn-primary" type="submit" form="Client" disabled>
+        <i class="bi bi-file-bar-graph-fill"></i>
+        @if (Model.Id == 0)
+        {
+            <text>Save</text>
+        }
+        else
+        {
+            <text>Update</text>
+        }
+    </button>
+</div>
 @section Scripts
 {
     <script src="~/js/Autocomplete.js"></script>

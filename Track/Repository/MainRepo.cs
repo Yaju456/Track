@@ -17,12 +17,12 @@ namespace Track.Repository
             _db = db;
             _dbset= db.Set<T>();
         }
-        public void Add(T obj)
+        public virtual void Add(T obj)
         {
             _dbset.Add(obj);
         }
 
-        public void Delete(T obj)
+        public virtual void Delete(T obj)
         {
             _dbset.Remove(obj);
         }

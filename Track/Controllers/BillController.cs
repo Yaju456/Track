@@ -222,7 +222,7 @@ namespace Track.Controllers
         }
 
         [HttpPost]
-        public IActionResult Addbill(BillClass bill)
+        public IActionResult CreateBill(BillClass bill)
         {
             ViewBag.ActivePage = "Bill";
             try
@@ -242,7 +242,7 @@ namespace Track.Controllers
                         one=_db.Billhasproduct.getSpecifics(u=>u.Bill_id==bill.Id, prop: null).ToList();
                     }
                     _db.Save();
-                    bill.Billno = "T-" + bill.Billno;
+                    bill.Billno = "T-" + bill.Id;
                     _db.Bill.Update(bill);
                    
                     foreach (var data in one)
@@ -258,7 +258,7 @@ namespace Track.Controllers
                         }
                     }
                     _db.Save();
-                    return View();
+                    return RedirectToAction("Addbill");
                 }
                 else
                 {
@@ -268,7 +268,13 @@ namespace Track.Controllers
             {
                 TempData["error"] = ex.Message;
             }
-            return RedirectToAction("CreateBill");
+            BillClass lili= new BillClass();
+            lili.Id = 0;
+            lili.Customer_id = 0;
+            lili.Customer = new CustomerClass();
+            lili.Customer.Name = "";
+            lili.Billno = bill.Billno;
+            return View(lili);
         }
 
         [HttpPost]
@@ -551,11 +557,18 @@ namespace Track.Controllers
                             }
 
                         }
+                        if(obj.Class.Bill_id==0)
+                        {
+                            obj.Class.Bill_id=null;
+                        }
                         _db.Billhasproduct.Update(obj.Class);
+                        _db.Save();
+                        
                         success1 = true;
                         message1 = "Value Updated";
                     }
-                    _db.Save();
+                 
+             
                     return Json(new
                     {
                         success = success1,

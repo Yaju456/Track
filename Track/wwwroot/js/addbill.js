@@ -60,6 +60,7 @@ function LoadTable(mval) {
             var Obj = "";
             
             $.each(result, function (index, value) {
+                let didi = 0;
                 if (mval == "" || mval == String(value.billno).toUpperCase()
                     || mval == String(value.total).toUpperCase() ||
                     mval == String(value.customer.name).toUpperCase() ||
@@ -76,15 +77,18 @@ function LoadTable(mval) {
 
                     Obj += '<td>' + value.customer.name + '</td>';
                     mySet.add(String(value.customer.name).toUpperCase());
-                    if (value.payment == null || value.payment == 0) {
+                    if (value.payment == null || value.payment == 0)
+                    {
                         Obj += '<td style="text-align: center;"><i class="text-danger bi bi-x-circle h1"></i></td>';
                         let date = new Date();
                         var diffInMilliseconds = Math.abs(new Date(value.date) - date);
                         console.log(diffInMilliseconds);
                         var diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
                         console.log(diffInDays);
-                        if (diffInDays > 5) {
-                            toastr["warning"](value.billno + " Bill still not clear after 5 days", "Unpaid Bill", { timeOut: 5000 });
+                        if (diffInDays > 5)
+                        {
+                            didi = 1;
+                            //toastr["warning"](value.billno + " Bill still not clear after 5 days", "Unpaid Bill", { timeOut: 5000 });
                         }
                     
                     }
@@ -102,7 +106,9 @@ function LoadTable(mval) {
                     else {
                         Obj += '<td> <a class="btn btn-success" href="/ChalaniToBill/Index/' + value.id + '">Edit</a></button><td>';
                     }
-
+                    if (didi != 0) {
+                        Obj +='<td><iframe src="https://giphy.com/embed/oWomIKXp66Lcruo9uT" width="40" height="40" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/stickers/transparent-warning-exclamation-oWomIKXp66Lcruo9uT"></a></p></td>'
+                    }
                     Obj += '</tr>';
                 }
             });

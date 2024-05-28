@@ -3,6 +3,7 @@
 *@
 @{
 }
+
 <style>
     .dropdown {
         position: relative;
@@ -38,6 +39,8 @@
         cursor: pointer;
     }
 </style>
+<partial name="_SearchBar" />
+<br />
 <div class="dropdown">
     <div class="dropdown-btn">Select Options</div>
     <div class="dropdown-content">
@@ -70,6 +73,7 @@
 
 @section Scripts 
 {
+    <script src="~/js/Autocomplete.js"></script>
     <script src="~/js/printThis.js"></script>
     <script src="~/js/payment.js"></script>
 }

@@ -1,4 +1,5 @@
-﻿var Commission = [];
+﻿var mySet = new Set();
+var Commission = [];
 var TDS = [];
 var VAT = [];
 $(document).ready(function () {
@@ -23,7 +24,7 @@ $(document).ready(function () {
 
 
 
-    reloadTable();
+    reloadTable("");
     $("#Commission").change(function () {
         if ($(this).is(':checked')) {
             addCoumn('Commission');
@@ -96,7 +97,15 @@ function addCoumn(columnName)
 function printBill() {
     $("#payTable").printThis();
 }
-function reloadTable()
+
+
+$("#form-search").on("submit", function (e) {
+    e.preventDefault();
+    var mval = String($("#myInput").val()).toUpperCase();
+    reloadTable(mval);
+});
+
+function reloadTable(mval)
 {
     $.ajax({
         method: 'GET',
@@ -110,17 +119,28 @@ function reloadTable()
             TDS = [];
             VAT = [];
             $.each(result, function (index, value) {
-                Obj += '<tr>';
-                Obj += '<td>' + value.method + '</td>';
-                Obj += '<td>' + String(value.pDate).slice(0, 10) + '</td>';
-                Obj += '<td>' + value.name+ '</td>';
-                Obj += '<td>' + value.bill_no + '</td>';
-                Obj += '<td>' + value.amount + '</td>';
-                Obj += '</tr>';
-                console.log(typeof (value.commission));
-                Commission.push(value.commission);
-                TDS.push(value.total * 0.015);
-                VAT.push(value.total * 0.13); 
+                if (mval == "" || mval == String(value.method).toUpperCase()
+                    || mval == String(String(value.pDate).slice(0, 10)).toUpperCase() || mval == String(value.name).toUpperCase() ||
+                    mval == String(value.bill_no).toUpperCase())
+                {
+                    Obj += '<tr>';
+                    Obj += '<td>' + value.method + '</td>';
+                    Obj += '<td>' + String(value.pDate).slice(0, 10) + '</td>';
+                    Obj += '<td>' + value.name + '</td>';
+                    Obj += '<td>' + value.bill_no + '</td>';
+                    Obj += '<td>' + value.amount + '</td>';
+                    Obj += '</tr>';
+                    console.log(typeof (value.commission));
+                    Commission.push(value.commission);
+                    TDS.push(value.total * 0.015);
+                    VAT.push(value.total * 0.13);
+                    mySet.add(value.method);
+                    mySet.add(String(value.pDate).slice(0, 10));
+                    mySet.add(String(value.name));
+                    mySet.add(String(value.bill_no));
+                    mySet.add(String(value.amount));
+                    autocomplete(document.getElementById("myInput"), Array.from(mySet));
+                }
             });
             $("#t-body").html(Obj);
         }

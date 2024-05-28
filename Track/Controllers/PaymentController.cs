@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using Track.Data;
 using Track.Models;
+using Track.PreData;
 using Track.Repository.Irepository;
 
 namespace Track.Controllers
 {
+    [Authorize(Roles =Roll.Admin)]
     public class PaymentController : Controller
     {
-        private readonly IunitOfwork _db;
         private readonly Applicationdbcontext _context;
-        public PaymentController(IunitOfwork db, Applicationdbcontext context)
+        public PaymentController( Applicationdbcontext context)
         {
-            _db = db;
             _context = context;
         }
         public IActionResult Index()

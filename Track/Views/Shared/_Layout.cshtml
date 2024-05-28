@@ -22,16 +22,29 @@
 </head>
 <body>
     <header>
-        <div class="sidebar" id="sidebar">
-            <a class="active" href="#home">Home</a>
+        @if (User.IsInRole(Roll.Admin))
+        {
+            <div class="sidebar" id="sidebar">
+                <div style=" display: block;
+        color: black;
+        padding: 16px;
+        text-decoration: none;">
+                <img src="~/Images/Softtech.png" style="height:40px; width:40px" alt="Company Photo" />Softech Infosys
+            </div>
             <a class="@(ViewBag.ActivePage == "Vendor" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="AddVendor">Vendor</a>
-            <a href="#news">News</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
+            <a class="@(ViewBag.ActivePage == "Order" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="Index">Inventory</a>
+            <a class="@(ViewBag.ActivePage == "Product" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
+            <a class="@(ViewBag.ActivePage == "Stock" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="addSerial">Stock</a>
+            <a class="@(ViewBag.ActivePage == "Customer" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="CustomerInfo">Customer</a>
+            <a class="@(ViewBag.ActivePage == "Bill" ? "active" : "")" asp-area="" asp-controller="bill" asp-action="Addbill">Bill</a>
+            <a class="@(ViewBag.ActivePage == "Chalani" ? "active" : "")" asp-area="" asp-controller="Chalani" asp-action="index">Chalani</a>
+            <a class="@(ViewBag.ActivePage == "Onrepair" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="OnRepair">On Repair</a>
+            <a class="@(ViewBag.ActivePage == "Payment" ? "active" : "")" asp-area="" asp-controller="Payment" asp-action="Index">Payment</a>
+            
         </div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="margin-left:200px;">
+        }
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style=" @(User.IsInRole(Roll.Admin)?"margin-left:200px;":"")" >
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Track</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -39,42 +52,10 @@
                 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.IsInRole(Roll.Admin))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Vendor" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="AddVendor">Vendor</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Order" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="Index">Inventory</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Product" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Stock" ? "active" : "")" asp-area="" asp-controller="Order" asp-action="addSerial">Stock</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Customer" ? "active" : "")" asp-area="" asp-controller="Main" asp-action="CustomerInfo">Customer</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Bill" ? "active" : "")" asp-area="" asp-controller="bill" asp-action="Addbill">Bill</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Chalani" ? "active" : "")" asp-area="" asp-controller="Chalani" asp-action="index">Chalani</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Onrepair" ? "active" : "")" asp-area="" asp-controller="Product" asp-action="OnRepair">On Repair</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewBag.ActivePage == "Payment" ? "active" : "")" asp-area="" asp-controller="Payment" asp-action="Index">Payment</a>
-                            </li>
-                        }
+                        <li class="nav-item navbar-brand">
+                            Softech Infosys Device Tracking System
+                        </li>
                         </ul>
-                        
                         <partial name="_loginPartial" />
                 </div>
             </div>

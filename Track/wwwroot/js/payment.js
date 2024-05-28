@@ -112,14 +112,15 @@ function reloadTable()
             $.each(result, function (index, value) {
                 Obj += '<tr>';
                 Obj += '<td>' + value.method + '</td>';
-                Obj += '<td>' + String(value.pDate).slice(0,10) + '</td>';
-                Obj += '<td>' + value.bill_id + '</td>';
+                Obj += '<td>' + String(value.pDate).slice(0, 10) + '</td>';
+                Obj += '<td>' + value.name+ '</td>';
+                Obj += '<td>' + value.bill_no + '</td>';
                 Obj += '<td>' + value.amount + '</td>';
                 Obj += '</tr>';
                 console.log(typeof (value.commission));
                 Commission.push(value.commission);
-                TDS.push(value.bill.total * 0.015);
-                VAT.push(value.bill.total * 0.13); 
+                TDS.push(value.total * 0.015);
+                VAT.push(value.total * 0.13); 
             });
             $("#t-body").html(Obj);
         }

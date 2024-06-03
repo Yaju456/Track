@@ -8,6 +8,7 @@ function sleep(ms) {
 async function Cus_change() {
     await sleep(500);
     var input = $("#Customer_search").val();
+
     console.log(input);
     var optionToSelect = $('#ClientName option').filter(function () {
         return $(this).text() === input;
@@ -163,7 +164,7 @@ function reloadTable() {
                 total += value.total;
                 Obj += '<td><a class="btn btn-danger" onclick=Delete("/bill/DeleteCom?id=' + value.id + '")><i class="bi bi-trash"></i> Delete</a></td>';
                 if (value.product == null) {
-                    Obj += '<td><button class="btn btn-success" onclick=EditService(' + value.id + ',\'' + value.extra_items + '\',' + value.rate + ',' + value.quantity + ') data-toggle="modal" \
+                    Obj += '<td><button class="btn btn-success" onclick=EditService(' + value.id + ',\'' + encodeURIComponent(value.extra_items) + '\',' + value.rate + ',' + value.quantity + ') data-toggle="modal" \
                     data-target="#ServiceModalLong">Edit</button></td>';
                 }
                 else {
@@ -310,7 +311,7 @@ function Add() {
 }
 
 function EditService(id, service, rate, quantity) {
-    $("#NService").val(service);
+    $("#NService").val(decodeURIComponent(service));
     $("#rate").val(rate);
     $("#quantity").val(quantity);
     $("#billS_id").val(id)

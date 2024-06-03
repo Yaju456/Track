@@ -186,6 +186,13 @@ function reloadTable() {
             Obj += '<tr>';
             Obj += '<td><td>';
             Obj += '<th>G. Total</th>';
+            Obj += '<td id="G-total1">' + (total + VAT) + '</td>';
+            Obj += '</tr>';
+
+            //
+            Obj += '<tr>';
+            Obj += '<td><td>';
+            Obj += '<th>G. Total after TDS</th>';
             Obj += '<td id="G-total">' + (total + VAT - TDS) + '</td>';
             Obj += '</tr>';
             //

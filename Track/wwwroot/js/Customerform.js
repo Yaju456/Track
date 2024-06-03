@@ -64,7 +64,7 @@ $(document).ready(function () {
 });
 
 async function hehe() {
-    await sleep(100);
+    await sleep(1000);
     var currentValue = encodeURIComponent($('#Name1').val());
     $.ajax({
         type: 'GET',
@@ -244,6 +244,8 @@ function f_submit(obj) {
             if (response.success) {
                 toastr["success"](response.message, response.type, { timeOut: 5000 });
                 $('#Customer_search').val($('#Name1').val());
+                $(':input[type="submit"]').prop('disabled', false);
+
                 document.getElementById("CustomerForm").reset();
                 reloadTable("");
                 fillCustomer();

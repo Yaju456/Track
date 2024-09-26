@@ -12,11 +12,11 @@ namespace Track.Models
         [ForeignKey(nameof(Bill_id))]
         [ValidateNever]
         public BillClass? Bill { get; set; }
-        public int? Rate { get; set; }
+        public decimal? Rate { get; set; }
         [Required]
         public int Quantity { get; set; }
 
-        public int? total { get; set; }
+        public decimal? total { get; set; }
         public int? product_id { get; set; }
         [ForeignKey("product_id ")]
         [ValidateNever]

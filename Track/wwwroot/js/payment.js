@@ -52,6 +52,8 @@ $(document).ready(function () {
         }
     });
 
+    LoadUpTable();
+
 });
 
 function removeColumn(columnName) {
@@ -124,7 +126,6 @@ function reloadTable(mval)
                     mval == String(value.bill_no).toUpperCase())
                 {
                     Obj += '<tr>';
-                    Obj += '<td>' + value.method + '</td>';
                     Obj += '<td>' + String(value.pDate).slice(0, 10) + '</td>';
                     Obj += '<td>' + value.name + '</td>';
                     Obj += '<td>' + value.bill_no + '</td>';
@@ -145,4 +146,38 @@ function reloadTable(mval)
             $("#t-body").html(Obj);
         }
     })
+}
+
+function LoadUpTable() {
+    $.ajax({
+        url: '/bill/AllBill',
+        type: 'Get',
+        dataType: 'json',
+        contentType: 'application/ json; charset = utf - 8;',
+        success: function (result) {
+            var Obj = "";
+            let total = 0;
+            $.each(result, function (index, value) {
+                const threshold = value.total - value.total * 0.015;
+                if (value.payment == null || value.payment < threshold) {
+                    Obj += '<tr>';
+                    Obj += `<td>${String(value.date).slice(0, 10)}</td>`;
+                    Obj += `<td>${value.billno}</td>`;
+                    Obj += `<td>${value.customer.name}</td>`;
+                    Obj += `<td>${value.total}<td>`;
+                    total += value.total;
+                    Obj += '</tr>';
+                }
+               
+            });
+            Obj +=
+                `<tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>G Total </strong></td>
+                    <td>${total}</td>
+                </tr>`
+            $("#Tup-body").html(Obj);
+        }
+    });
 }

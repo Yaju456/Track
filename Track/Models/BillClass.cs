@@ -19,11 +19,11 @@ namespace Track.Models
         public CustomerClass? Customer { get; set; }
         public string? Billno { get; set; }
         [Required]
-        public double total { get; set; }
+        public decimal total { get; set; }
 
         public DateTime? Date {  get; set; } 
 
-        public double? payment { get; set; }
+        public decimal? payment { get; set; }
 
         public string? Remark { get; set; }
 

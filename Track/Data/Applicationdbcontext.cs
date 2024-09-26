@@ -50,6 +50,21 @@ namespace Track.Data
             modelBuilder.Entity<BillClass>().HasIndex(a => a.Billno).IsUnique();
             modelBuilder.Entity<CustomerClass>().HasCheckConstraint("PhoneNumberCheck", "[PhoneNumber] BETWEEN 9800000000 AND 9899999999");
             modelBuilder.Entity<ProvinceClass>().ToTable("Province");
+            modelBuilder.Entity<BillClass>()
+        .Property(b => b.payment)
+        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<BillClass>()
+        .Property(b => b.total)
+        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<BillhasProductClass>()
+        .Property(b => b.Rate)
+        .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<BillhasProductClass>()
+        .Property(b => b.total)
+        .HasColumnType("decimal(18,2)");
+
+
+
         }
     }
 }

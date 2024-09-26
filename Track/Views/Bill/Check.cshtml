@@ -18,10 +18,9 @@
                     <div class="form-group">
                         <label for="Pmethod">Method</label>
                         <select id="Pmethod" class="form-select">
-                            <option disabled selected>--select option--</option>
+                            <option selected value="Bank Transfer">Bank Transfer</option>
                             <option value="Cash">Cash</option>
                             <option value="Cheque">Cheque</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
                             <option value="E-wallet">E-Wallet</option>
                         </select>
                     </div>
@@ -39,7 +38,7 @@
                     </div>
                     <div class="form-group">
                         <label for="sold_By">Sold by</label>
-                        <input type="text" id="sold_By" class="form-control"/>
+                        <input type="text" id="sold_By" value="Tika Jee" class="form-control"/>
                     </div>
                     <input id="Bid" hidden asp-for=@Model.Id/>
                     <br />

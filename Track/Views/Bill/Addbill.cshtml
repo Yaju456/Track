@@ -3,6 +3,17 @@
 *@
 @{
 }
+<style>
+    .mybtn{
+        text-decoration:none;
+        color:black;
+    }
+    .mybtn:hover{
+        cursor:pointer;
+        text-decoration:none;
+        color:black;
+    }
+</style>
 <partial name="_SearchBar" />
 <from>
     <div class="form-row">
@@ -21,7 +32,7 @@
     </div>
     
 </from>
-<table class="table">
+<table class="table" id="BillTable">
     <thead>
         <tr>
             <th>
@@ -31,18 +42,18 @@
                 Bill no
             </th>
             <th>
-                Total
-            </th>
-            <th>
                 Customer Name
             </th>
-            <th style="text-align: center;">
-                Payment Process
-            </th>
             <th>
+                Total
+            </th>
+            <th style="text-align: center;" class="hideit">
+                <a class="mybtn" id="mybtn">Payment Process</a>
+            </th>
+            <th class="hideit">
                 View
             </th>   
-            <th>
+            <th class="hideit">
                 <a class="btn btn-primary" asp-action="CreateBill">Add</a>
             </th>
         </tr>
@@ -51,7 +62,12 @@
 
     </tbody>    
 </table>
+
+<button class="btn btn-primary" onclick="printAll()">Print</button>
+
+
 @section Scripts{
     <script src="~/js/Autocomplete.js"></script>
+    <script src="~/js/printThis.js"></script>
     <script src="~/js/addbill.js"></script>
 }

@@ -122,7 +122,7 @@ namespace Track.Controllers
                     iconItem.Rate = one.Rates[rat];
                     rat++;
                     iconItem.total= iconItem.Rate*iconItem.Quantity;
-                    myBill.total +=Convert.ToDouble(iconItem.Rate * iconItem.Quantity);
+                    myBill.total += (iconItem.Rate * iconItem.Quantity)??0;
                     _db.Billhasproduct.Update(iconItem);
                 }
                 ChalaniClass myChal= _db.Chalani.GetOne(u => u.Bill_id==myBill.Id, null);
@@ -216,7 +216,8 @@ namespace Track.Controllers
                 return Json(new
                 {
                     success=false,
-                    message="Modal state not valid"
+                    message="Modal state not valid",
+                    error = ModelState.Where(x => x.Value.Errors.Any()).SelectMany(x => x.Value.Errors.Select(x1 => x1.ErrorMessage))
                 });
             }
             

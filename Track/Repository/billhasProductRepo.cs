@@ -22,7 +22,7 @@ namespace Track.Repository
             if (obj.Bill_id != null)
             {
                 BillClass bill= _db.Bill.FirstOrDefault(u=>u.Id==obj.Bill_id);
-                bill.total += Convert.ToDouble(obj.total);
+                bill.total += obj.total??0;
                 _db.Bill.Update(bill);
                 _db.SaveChanges();
             }
@@ -39,7 +39,7 @@ namespace Track.Repository
                     BillClass myBill= _db.Bill.FirstOrDefault(u=>u.Id==obj.Bill_id);
                     if (myBill!=null)
                     {
-                        myBill.total = Convert.ToDouble(myBill.total - To_update.total + obj.total);
+                        myBill.total = (myBill.total - To_update.total + obj.total)??0;
                         _db.Bill.Update(myBill);
                         _db.SaveChanges();
                     }
@@ -59,7 +59,7 @@ namespace Track.Repository
             BillClass mybill= _db.Bill.FirstOrDefault(u=>u.Id== obj.Bill_id);
             if (mybill != null)
             {
-                mybill.total -= Convert.ToDouble(obj.total);
+                mybill.total -= obj.total??0;
                 _db.Update(mybill); 
             }
             _billhasProducts.Remove(obj);

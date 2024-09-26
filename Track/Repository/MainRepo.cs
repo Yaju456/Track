@@ -53,7 +53,7 @@ namespace Track.Repository
             if(prop != null) 
             {
                 foreach(var pop in prop.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
-                {
+                {   
                     one=one.Include(pop);
                 }
             }

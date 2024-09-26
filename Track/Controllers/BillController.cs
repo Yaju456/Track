@@ -54,7 +54,16 @@ namespace Track.Controllers
                 BillClass man = new BillClass();
                 man.Customer = new CustomerClass();
                 man.Customer.Name = "";
-                man.Billno = "T-" + (_db.Bill.getAll(null).OrderByDescending(u => u.Id).FirstOrDefault().Id + 1);
+                if(_db.Bill.getAll(null).OrderByDescending(man => man.Id).FirstOrDefault()!=null)
+                {
+                    man.Billno = "T-" + (_db.Bill.getAll(null).OrderByDescending(man => man.Id).FirstOrDefault().Id+1);
+                }
+                else
+                {
+                    man.Billno = "T-" + (_db.Bill.getAll(null).Count() + 1);
+
+                }
+
                 return View(man);
             }
             return View(myBill);
